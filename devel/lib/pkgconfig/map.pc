@@ -1,0 +1,8 @@
+prefix=/home/poposhca/Documents/AutoNOMOS-Playground/devel
+
+Name: map
+Description: Description of map
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib 
+Requires: 

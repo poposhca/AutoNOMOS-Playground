@@ -1,0 +1,8 @@
+prefix=/home/poposhca/Documents/AutoNOMOS-Playground/devel
+
+Name: navigation
+Description: Description of navigation
+Version: 0.0.0
+Cflags: -I/home/poposhca/Documents/AutoNOMOS-Playground/src/navigation/include
+Libs: -L/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib 
+Requires: 

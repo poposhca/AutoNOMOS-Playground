@@ -7,8 +7,7 @@ project(control_low)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(gazebo REQUIRED )
-find_package(catkin REQUIRED roscpp std_msgs gazebo_msgs )
+find_package(catkin REQUIRED roscpp std_msgs )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -114,10 +113,9 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include 
-		${GAZEBO_INCLUDE_DIRS})
+## include_directories(include )
 
-link_directories(${GAZEBO_LIBRARY_DIRS})
+link_directories()
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
@@ -149,7 +147,7 @@ add_executable(control_low PIDcontroller_lane_sim.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(control_low ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(control_low ${catkin_LIBRARIES} )
 
 
 #############

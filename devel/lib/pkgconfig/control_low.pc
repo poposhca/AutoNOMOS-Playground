@@ -1,0 +1,8 @@
+prefix=/home/poposhca/Documents/AutoNOMOS-Playground/devel
+
+Name: control_low
+Description: Description of control_low
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib 
+Requires: 
