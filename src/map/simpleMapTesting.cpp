@@ -4,6 +4,8 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/UInt32.h>
 #include <std_msgs/Int8.h>
+#include <fstream>
+#include <string>
 
 using namespace std;
 using namespace std_msgs;
@@ -51,6 +53,25 @@ public:
         }
     }
 
+    void LoadDummyMap(string file)
+    {
+        ifstream input(file);
+        if(input.is_open())
+        {
+            int i = 0;
+            string row;
+            while(getline(input, row))
+            {
+                for(int j = 0; j < this->width.data; j++)
+                    this->GridMap[i++].data = row[j] == '1' ? 100 : 0;
+            }
+        }
+        else
+        {
+            cout << "Problem with file: " << file << endl;
+        }
+    }
+
 };
 
 int main(int argc, char **argv)
@@ -59,19 +80,22 @@ int main(int argc, char **argv)
 
     int width;
     int height;
+    string file;
     ros::NodeHandle nh("~");
 
     nh.param<int>("width", width, 0);
     nh.param<int>("height", height, 0);
+    nh.param<string>("mapFile", file, "");
     if(width == 0 && height == 0)
     {
         cout << "Empty Map!!!" << endl;
         return -9;
     }
 
-
     Map myMap(width, height);
+    myMap.LoadDummyMap(file);
     myMap.PrintMapInConsole();
+
 
     return 0;
 }

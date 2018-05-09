@@ -2,9 +2,9 @@
 
     <node name="map" pkg="map" type="map" output="screen" > 
 
-        <param name="width"     type="int"      value="2"/>
+        <param name="width"     type="int"      value="3"/>
         <param name="height"    type="int"      value="30"/>
-        <param name="mapFile"   type="string"   value=""/>
+        <param name="mapFile"   type="string"   value="/home/poposhca/Documents/AutoNOMOS-Playground/src/map/map.txt"/>
 
     </node> 
  
