@@ -64,6 +64,7 @@ map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/ros/wall
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/ros/wall_timer_options.h
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/rosconsole/macros_generated.h
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/std_msgs/Float32.h
+map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/std_msgs/Float64.h
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/std_msgs/Header.h
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/std_msgs/Int8.h
 map/CMakeFiles/map.dir/simpleMapTesting.cpp.o: /opt/ros/kinetic/include/std_msgs/UInt32.h

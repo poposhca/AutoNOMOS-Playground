@@ -1,11 +1,16 @@
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
+#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Quaternion.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Float64.h>
 #include <std_msgs/UInt32.h>
 #include <std_msgs/Int8.h>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace std_msgs;
@@ -14,41 +19,62 @@ class Map
 {
 
 private:
-    UInt32 width;
-    UInt32 height;
-    Int8 *GridMap;
+    ros::Publisher mapPublisher;
+    nav_msgs::OccupancyGrid map;
 
+    //No se si usar estos parametros
+    unsigned int width;
+    unsigned int height;
+    
 public:
 
     //Constructor creates map
-    Map(int width, int height)
+    Map(int width, int height, string file)
     {
-        this->width.data = width;
-        this->height.data = height;
+        
+        this->width = width;
+        this->height = height;
 
-        int vectorSize = width * height;
-        cout << "Vector: " << vectorSize << endl;
-        this->GridMap = new Int8[vectorSize];
-        Int8 valueStruct;
-        valueStruct.data = -1;
-        for(int i = 0; i < vectorSize; i++)
-        {
-            this->GridMap[i] = valueStruct;
-        }
+        LoadDummyMap(file);
+
+        geometry_msgs::Point originPoint;
+        originPoint.x = 0;
+        originPoint.y = 0;
+        originPoint.z = 0;
+
+        geometry_msgs::Quaternion originQuarternion;
+        originQuarternion.x = 0;
+        originQuarternion.y = 0;
+        originQuarternion.z = 0;
+        originQuarternion.w = 0;
+
+        nav_msgs::MapMetaData metadata;
+        metadata.resolution = 1.0;
+        metadata.width = this->width;
+        metadata.height = this->height;
+
+        geometry_msgs::Pose originPose;
+        originPose.position = originPoint;
+        originPose.orientation = originQuarternion;
+        metadata.origin = originPose;
+        map.info = metadata;
+
+        ros::NodeHandle nh;
+        mapPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/map", 1000);
     }
 
     void publicMap()
     {
-
+        mapPublisher.publish(map);
     }
 
     void PrintMapInConsole()
     {
         int i = 0;
-        for(int row = 0; row < this->height.data; row++)
+        for(int row = 0; row < this->height; row++)
         {
-            for(int column = 0; column < this->width.data; column++)
-                cout << this->GridMap[i++].data << " ";
+            for(int column = 0; column < this->width; column++)
+                cout << this->map.data[i++] << " ";
             cout << endl;
         }
     }
@@ -58,12 +84,12 @@ public:
         ifstream input(file);
         if(input.is_open())
         {
-            int i = 0;
             string row;
             while(getline(input, row))
             {
-                for(int j = 0; j < this->width.data; j++)
-                    this->GridMap[i++].data = row[j] == '1' ? 100 : 0;
+                cout << row << endl;
+                for(int j = 0; j < this->width; j++)
+                    this->map.data.push_back(row[j] == '1' ? 100 : 0);
             }
         }
         else
@@ -92,10 +118,14 @@ int main(int argc, char **argv)
         return -9;
     }
 
-    Map myMap(width, height);
-    myMap.LoadDummyMap(file);
+    Map myMap(width, height, file);
     myMap.PrintMapInConsole();
 
+    cout << "Publicando mapa" << endl;
+    while(ros::ok)
+    {
+        myMap.publicMap();
+    }
 
     return 0;
 }

@@ -7,5 +7,6 @@
 subdirs(gtest)
 subdirs(map)
 subdirs(model)
+subdirs(heighlevelplanner)
 subdirs(control_low)
 subdirs(control)

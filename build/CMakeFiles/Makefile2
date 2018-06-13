@@ -245,7 +245,7 @@ gtest/preinstall:
 gtest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=3,4 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=5,6 "Built target gtest"
 .PHONY : gtest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -277,7 +277,7 @@ clean: gtest/CMakeFiles/gtest.dir/clean
 gtest/CMakeFiles/gtest_main.dir/all: gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/CMakeFiles/gtest_main.dir/build.make gtest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gtest_main.dir/build.make gtest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=5,6 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=7,8 "Built target gtest_main"
 .PHONY : gtest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -901,7 +901,7 @@ clean: map/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean
 map/CMakeFiles/map.dir/all:
 	$(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/depend
 	$(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=7,8 "Built target map"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=9,10 "Built target map"
 .PHONY : map/CMakeFiles/map.dir/all
 
 # Include target in all.
@@ -1372,7 +1372,7 @@ model/preinstall:
 model/CMakeFiles/model.dir/all:
 	$(MAKE) -f model/CMakeFiles/model.dir/build.make model/CMakeFiles/model.dir/depend
 	$(MAKE) -f model/CMakeFiles/model.dir/build.make model/CMakeFiles/model.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=9,10 "Built target model"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=11,12 "Built target model"
 .PHONY : model/CMakeFiles/model.dir/all
 
 # Include target in all.
@@ -1403,6 +1403,100 @@ clean: model/CMakeFiles/model.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Directory level rules for directory heighlevelplanner
+
+# Convenience name for "all" pass in the directory.
+heighlevelplanner/all: heighlevelplanner/CMakeFiles/SEARCHER.dir/all
+heighlevelplanner/all: heighlevelplanner/CMakeFiles/planner.dir/all
+
+.PHONY : heighlevelplanner/all
+
+# Convenience name for "clean" pass in the directory.
+heighlevelplanner/clean: heighlevelplanner/CMakeFiles/SEARCHER.dir/clean
+heighlevelplanner/clean: heighlevelplanner/CMakeFiles/planner.dir/clean
+
+.PHONY : heighlevelplanner/clean
+
+# Convenience name for "preinstall" pass in the directory.
+heighlevelplanner/preinstall:
+
+.PHONY : heighlevelplanner/preinstall
+
+#=============================================================================
+# Target rules for target heighlevelplanner/CMakeFiles/SEARCHER.dir
+
+# All Build rule for target.
+heighlevelplanner/CMakeFiles/SEARCHER.dir/all:
+	$(MAKE) -f heighlevelplanner/CMakeFiles/SEARCHER.dir/build.make heighlevelplanner/CMakeFiles/SEARCHER.dir/depend
+	$(MAKE) -f heighlevelplanner/CMakeFiles/SEARCHER.dir/build.make heighlevelplanner/CMakeFiles/SEARCHER.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=1,2 "Built target SEARCHER"
+.PHONY : heighlevelplanner/CMakeFiles/SEARCHER.dir/all
+
+# Include target in all.
+all: heighlevelplanner/CMakeFiles/SEARCHER.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+heighlevelplanner/CMakeFiles/SEARCHER.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 heighlevelplanner/CMakeFiles/SEARCHER.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles 0
+.PHONY : heighlevelplanner/CMakeFiles/SEARCHER.dir/rule
+
+# Convenience name for target.
+SEARCHER: heighlevelplanner/CMakeFiles/SEARCHER.dir/rule
+
+.PHONY : SEARCHER
+
+# clean rule for target.
+heighlevelplanner/CMakeFiles/SEARCHER.dir/clean:
+	$(MAKE) -f heighlevelplanner/CMakeFiles/SEARCHER.dir/build.make heighlevelplanner/CMakeFiles/SEARCHER.dir/clean
+.PHONY : heighlevelplanner/CMakeFiles/SEARCHER.dir/clean
+
+# clean rule for target.
+clean: heighlevelplanner/CMakeFiles/SEARCHER.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target heighlevelplanner/CMakeFiles/planner.dir
+
+# All Build rule for target.
+heighlevelplanner/CMakeFiles/planner.dir/all: heighlevelplanner/CMakeFiles/SEARCHER.dir/all
+	$(MAKE) -f heighlevelplanner/CMakeFiles/planner.dir/build.make heighlevelplanner/CMakeFiles/planner.dir/depend
+	$(MAKE) -f heighlevelplanner/CMakeFiles/planner.dir/build.make heighlevelplanner/CMakeFiles/planner.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=13,14 "Built target planner"
+.PHONY : heighlevelplanner/CMakeFiles/planner.dir/all
+
+# Include target in all.
+all: heighlevelplanner/CMakeFiles/planner.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+heighlevelplanner/CMakeFiles/planner.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 heighlevelplanner/CMakeFiles/planner.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles 0
+.PHONY : heighlevelplanner/CMakeFiles/planner.dir/rule
+
+# Convenience name for target.
+planner: heighlevelplanner/CMakeFiles/planner.dir/rule
+
+.PHONY : planner
+
+# clean rule for target.
+heighlevelplanner/CMakeFiles/planner.dir/clean:
+	$(MAKE) -f heighlevelplanner/CMakeFiles/planner.dir/build.make heighlevelplanner/CMakeFiles/planner.dir/clean
+.PHONY : heighlevelplanner/CMakeFiles/planner.dir/clean
+
+# clean rule for target.
+clean: heighlevelplanner/CMakeFiles/planner.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Directory level rules for directory control_low
 
 # Convenience name for "all" pass in the directory.
@@ -1427,7 +1521,7 @@ control_low/preinstall:
 control_low/CMakeFiles/control_low.dir/all:
 	$(MAKE) -f control_low/CMakeFiles/control_low.dir/build.make control_low/CMakeFiles/control_low.dir/depend
 	$(MAKE) -f control_low/CMakeFiles/control_low.dir/build.make control_low/CMakeFiles/control_low.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=1,2 "Built target control_low"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=3,4 "Built target control_low"
 .PHONY : control_low/CMakeFiles/control_low.dir/all
 
 # Include target in all.
@@ -1652,7 +1746,7 @@ clean: control/CMakeFiles/std_srvs_generate_messages_cpp.dir/clean
 control/CMakeFiles/pose_controller.dir/all:
 	$(MAKE) -f control/CMakeFiles/pose_controller.dir/build.make control/CMakeFiles/pose_controller.dir/depend
 	$(MAKE) -f control/CMakeFiles/pose_controller.dir/build.make control/CMakeFiles/pose_controller.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=11,12 "Built target pose_controller"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/poposhca/Documents/AutoNOMOS-Playground/build/CMakeFiles --progress-num=15,16 "Built target pose_controller"
 .PHONY : control/CMakeFiles/pose_controller.dir/all
 
 # Include target in all.

@@ -673,6 +673,32 @@ model/fast:
 .PHONY : model/fast
 
 #=============================================================================
+# Target rules for targets named SEARCHER
+
+# Build rule for target.
+SEARCHER: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 SEARCHER
+.PHONY : SEARCHER
+
+# fast build rule for target.
+SEARCHER/fast:
+	$(MAKE) -f heighlevelplanner/CMakeFiles/SEARCHER.dir/build.make heighlevelplanner/CMakeFiles/SEARCHER.dir/build
+.PHONY : SEARCHER/fast
+
+#=============================================================================
+# Target rules for targets named planner
+
+# Build rule for target.
+planner: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 planner
+.PHONY : planner
+
+# fast build rule for target.
+planner/fast:
+	$(MAKE) -f heighlevelplanner/CMakeFiles/planner.dir/build.make heighlevelplanner/CMakeFiles/planner.dir/build
+.PHONY : planner/fast
+
+#=============================================================================
 # Target rules for targets named control_low
 
 # Build rule for target.
@@ -880,6 +906,8 @@ help:
 	@echo "... nav_msgs_generate_messages_nodejs"
 	@echo "... nav_msgs_generate_messages_py"
 	@echo "... model"
+	@echo "... SEARCHER"
+	@echo "... planner"
 	@echo "... control_low"
 	@echo "... turtlesim_generate_messages_lisp"
 	@echo "... turtlesim_generate_messages_cpp"
