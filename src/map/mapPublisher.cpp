@@ -1,51 +1,65 @@
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include "MapGetters/mapping.h"
-#include "MapGetters/simpleMapTesting.h"
+#include "MapGetters/lidarSensingMap.h"
+
+#define RATE_HZ 5
 
 using namespace std;
 
-void PrintMapInConsole(const nav_msgs::OccupancyGrid& map)
+void PublicMap(const nav_msgs::OccupancyGrid* map, const ros::Publisher publisher)
 {
+    ROS_INFO_STREAM("Publicando mapa");
+    publisher.publish(*map);
+}
+
+void PrintMapInConsole(const nav_msgs::OccupancyGrid* map)
+{
+    ROS_INFO_STREAM("Imprimiendo en consola:");
     int i = 0;
-    for(int row = 0; row < map.info.height; row++)
+    for(int row = 0; row < map->info.height; row++)
     {
-        for(int column = 0; column < map.info.width; column++)
-            cout << map.data[i++] << " ";
+        for(int column = 0; column < map->info.width; column++)
+            cout << map->data[i++] << " ";
         cout << endl;
     }
 }
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "Ocupancy Map Node");
+    ros::init(argc, argv, "MapNode");
+    ros::NodeHandle nh;
+    ros::Rate loop_rate(RATE_HZ);
 
+    auto mapPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/map", 1000);
+
+    //Este bloque lo tengo que separar
+    /*
     int width;
     int height;
     string file;
-    ros::NodeHandle nh("~");
-
-    nh.param<int>("width", width, 0);
-    nh.param<int>("height", height, 0);
-    nh.param<string>("mapFile", file, "");
+    ros::NodeHandle nhParamas("~");
+    nhParamas.param<int>("width", width, 0);
+    nhParamas.param<int>("height", height, 0);
+    nhParamas.param<string>("mapFile", file, "");
     if(width == 0 && height == 0)
     {
         cout << "Empty Map!!!" << endl;
         return -9;
     }
+    //
+    */
 
-    mapping *myMap = new SimpleMap(width, height, file);
-    auto map = myMap->GetMap();
-    PrintMapInConsole(map);
-    cout << "Ya tengo mapa, otra vez" << endl;
-
-    /*
-    cout << "Publicando mapa" << endl;
+    mapping *myMap = new lidarSensingMap(nh);
+    
+    cout << "Map node up & running" << endl;
     while(ros::ok)
     {
-        myMap.publicMap();
+        ros::spinOnce();
+        auto map = myMap->GetMap();
+        //PrintMapInConsole(map);
+        PublicMap(map, mapPublisher);
     }
-    */
 
     return 0;
 }

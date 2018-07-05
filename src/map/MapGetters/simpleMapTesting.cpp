@@ -49,21 +49,11 @@ SimpleMap::SimpleMap(int width, int height, string file)
     map.info = metadata;
 }
 
-/*
-void SimpleMap::publicMap()
+nav_msgs::OccupancyGrid* SimpleMap::GetMap()
 {
-    mapPublisher.publish(map);
+    //return this->map;
+    return NULL;
 }
-*/
-
-nav_msgs::OccupancyGrid& SimpleMap::GetMap()
-{
-    return this->map;
-}
-
-/*
-
-*/
 
 void SimpleMap::LoadDummyMap(string file)
 {

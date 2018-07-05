@@ -120,6 +120,7 @@ include_directories(
 add_library(MAPPING
   MapGetters/mapping.h
   MapGetters/simpleMapTesting.cpp
+  MapGetters/lidarSensingMap.cpp
 )
 
 ## Add cmake target dependencies of the library

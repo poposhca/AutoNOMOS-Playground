@@ -6,7 +6,7 @@
 class mapping
 {
 public:
-    virtual nav_msgs::OccupancyGrid& GetMap() = 0;
+    virtual nav_msgs::OccupancyGrid* GetMap() = 0;
 };
 
 #endif

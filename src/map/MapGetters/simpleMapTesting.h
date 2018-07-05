@@ -16,7 +16,7 @@ private:
     unsigned int height;
 public:
     SimpleMap(int width, int height, string file);
-    nav_msgs::OccupancyGrid& GetMap();
+    nav_msgs::OccupancyGrid* GetMap();
     void LoadDummyMap(string file);
 };
 
