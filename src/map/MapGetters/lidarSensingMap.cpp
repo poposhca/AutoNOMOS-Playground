@@ -3,15 +3,20 @@
 
 lidarSensingMap::lidarSensingMap(ros::NodeHandle nh)
 {
-    // Init params
     ros::NodeHandle priv_nh("~");
     std::string node_name = ros::this_node::getName();
     priv_nh.param<float>(node_name+"/laser_range_min", laser_range_min, .008);
     priv_nh.param<float>(node_name+"/laser_range_max", laser_range_max, 6);
     priv_nh.param<float>(node_name+"/cell_resolution", cell_resolution, 0.25);
     priv_nh.param<int>(node_name+"/angle_offset", angle_offset, 90);
+    InitOccupancyGrid();
+    ROS_INFO_STREAM("Iniciando Pre-procesamiento:");
+    InitLasersPreProcessing();
+    this->sub_laser_scan = nh.subscribe("/scan", 1, &lidarSensingMap::UpdateLidar, this);
+}
 
-    //Init OccupancyGrid
+void lidarSensingMap::InitOccupancyGrid()
+{
     this->occupancy_grid = new nav_msgs::OccupancyGrid;
     this->cells_number_by_row = (2 * laser_range_max) / cell_resolution;
     this->occupancy_grid->data.resize(cells_number_by_row * cells_number_by_row);
@@ -25,9 +30,35 @@ lidarSensingMap::lidarSensingMap(ros::NodeHandle nh)
     this->occupancy_grid->info.resolution = this->cell_resolution;
     this->occupancy_grid->info.width = this->cells_number_by_row;
     this->occupancy_grid->info.height = this->cells_number_by_row;
+}
 
-    //Subscriber (lidar listener)
-    this->sub_laser_scan = nh.subscribe("/scan", 1, &lidarSensingMap::UpdateLidar, this);
+void lidarSensingMap::InitLasersPreProcessing()
+{
+    this->lasersGrid = new std::vector<laser>;
+    float delta = this->cell_resolution / 2;
+    for(int i = 0; i < 360; i++)
+    {
+#ifdef DEBUGLASER
+        ROS_INFO_STREAM("Laser: " << i);
+#endif
+        laser newLaser;
+        float x = cos((i + angle_offset) * M_PI / 180);
+        float y = sin((i + angle_offset) * M_PI / 180);
+        float l = delta;
+        while(l < this->laser_range_max)
+        {
+            float space_x = l * x;
+            float space_y = l * y;
+            auto gird_coordenates = MapCoordenatesToGridSpace(space_x, space_y);
+            auto gridCell = GridCoordentaesToCellNumber(std::get<0>(gird_coordenates), std::get<1>(gird_coordenates));
+            if(!newLaser.HasCellIndex(gridCell))
+            {
+                newLaser.insertCell(gridCell, l);
+            }
+            l += delta; 
+        }
+        this->lasersGrid->push_back(newLaser);
+    }
 }
 
 void lidarSensingMap::UpdateLidar(const sensor_msgs::LaserScan &msg)
@@ -51,29 +82,32 @@ nav_msgs::OccupancyGrid* lidarSensingMap::GetMap()
     actual_grid.header.frame_id = "0";
     actual_grid.info.map_load_time = ros::Time::now();
 
+    int gridCell;
     float x, y, h;
-    std::tuple<int,int> gridPoint;
-    auto *valid_laser_beams = new std::vector<std::tuple<int,int>>;
+    std::tuple<int, int> gird_coordenates;
 	for (int i = 0; i < 360; ++i)
 	{
+        auto actual_laser = this->lasersGrid->at(i);
+        actual_laser.Clear();
 		h = laser_ranges[i];
 		if (h <= laser_range_max && h > 2 * cell_resolution)
 		{
 			x = h * cos( (i + angle_offset) * M_PI / 180);
 			y = h * sin( (i + angle_offset) * M_PI / 180);
-			gridPoint = MapCoordenatesToGridSpace(x,y);
-            //valid_laser_beams->push_back(gridPoint);
-			WriteProbabilityOnGrid(std::get<0>(gridPoint), std::get<1>(gridPoint), 99);
+			gird_coordenates = MapCoordenatesToGridSpace(x,y);
+            gridCell = GridCoordentaesToCellNumber(std::get<0>(gird_coordenates), std::get<1>(gird_coordenates));
+            actual_laser.SetObstacle(h, gridCell);
+            actual_laser.WriteProbabilityOnGrid(this->occupancy_grid);
+			//WriteProbabilityOnGrid(std::get<0>(gridPoint), std::get<1>(gridPoint), 99);
 		}
 #ifdef DEBUGLASER
         ROS_INFO_STREAM("Datos del laser:");
         std::cout << i << "->" << this->laser_ranges[i] << std::endl;
         std::cout << "Punto en el espacio: ( " << x << ", " << y << " )" << std::endl;
-        std::cout << "Grid point: ( " << std::get<0>(gridPoint) << ", " << std::get<1>(gridPoint) << " )" << std::endl;
-        std::cout << "Celada del grid: " << std::get<0>(gridPoint) +  std::get<1>(gridPoint) * this->cells_number_by_row << std::endl;
+        std::cout << "Grid point: ( " << std::get<0>(gird_coordenates) << ", " << std::get<1>(gird_coordenates) << " )" << std::endl;
+        std::cout << "Celada del grid: " << gridCell << std::endl;
 #endif
 	}
-    //GetBeamIntersectionCells(valid_laser_beams);
     return this->occupancy_grid;
 }
 
@@ -82,6 +116,19 @@ std::tuple<int,int> lidarSensingMap::MapCoordenatesToGridSpace(float x, float y)
     int x_grid = (int) ((this->cells_number_by_row / 2.0f) + (x / this->cell_resolution)); 
     int y_grid = (int) ((this->cells_number_by_row / 2.0f) + (y / this->cell_resolution)); 
     return std::make_tuple(x_grid, y_grid);
+}
+
+int lidarSensingMap::GridCoordentaesToCellNumber(int grid_x, int grid_y)
+{
+    return grid_x +  grid_y * this->cells_number_by_row;
+}
+
+void lidarSensingMap::WriteProbabilityOnGrid(int grid_x, int gird_y, int p)
+{
+    this->occupancy_grid->data[grid_x +  gird_y * this->cells_number_by_row] = p;
+#ifdef DEBUG
+    ROS_INFO_STREAM("Escribiendo en celada: " << grid_x +  gird_y * this->cells_number_by_row);
+#endif
 }
 
 void lidarSensingMap::GetBeamIntersectionCells(std::vector<std::tuple<int,int>> *valid_laser_beams)
@@ -112,12 +159,4 @@ void lidarSensingMap::GetBeamIntersectionCells(std::vector<std::tuple<int,int>> 
             }
         } 
     }
-}
-
-void lidarSensingMap::WriteProbabilityOnGrid(int grid_x, int gird_y, int p)
-{
-    this->occupancy_grid->data[grid_x +  gird_y * this->cells_number_by_row] = p;
-#ifdef DEBUG
-    ROS_INFO_STREAM("Escribiendo en celada: " << grid_x +  gird_y * this->cells_number_by_row);
-#endif
 }

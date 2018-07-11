@@ -9,6 +9,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 #include "mapping.h"
+#include "../laser/laser.h"
 
 class lidarSensingMap : public mapping
 {
@@ -23,15 +24,20 @@ private:
     int angle_offset;
     float cell_resolution;
     //Laser grid
+    std::vector<laser> *lasersGrid;
     nav_msgs::OccupancyGrid *occupancy_grid;
     float cells_number_by_row;
     float laser_ranges[360];
 
     //Methods
+    void InitOccupancyGrid();
+    void InitLasersPreProcessing();
     void UpdateLidar(const sensor_msgs::LaserScan &msg);
     std::tuple<int, int> MapCoordenatesToGridSpace(float x, float y);
-    void GetBeamIntersectionCells(std::vector<std::tuple<int,int>> *valid_laser_beams);
+    int GridCoordentaesToCellNumber(int grid_x, int grid_y);
     void WriteProbabilityOnGrid(int grid_x, int gird_y, int p);
+
+    void GetBeamIntersectionCells(std::vector<std::tuple<int,int>> *valid_laser_beams);
 
 public:
 

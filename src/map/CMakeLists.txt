@@ -122,6 +122,9 @@ add_library(MAPPING
   MapGetters/simpleMapTesting.cpp
   MapGetters/lidarSensingMap.cpp
 )
+add_library(LASER
+  laser/laser.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -147,6 +150,7 @@ add_executable(${PROJECT_NAME} mapPublisher.cpp)
  target_link_libraries(${PROJECT_NAME}
    ${catkin_LIBRARIES}
    MAPPING
+   LASER
  )
 
 #############
