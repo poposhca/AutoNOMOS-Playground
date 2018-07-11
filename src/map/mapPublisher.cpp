@@ -9,7 +9,6 @@ using namespace std;
 
 void PublicMap(const nav_msgs::OccupancyGrid* map, const ros::Publisher publisher)
 {
-    ROS_INFO_STREAM("Publicando mapa");
     publisher.publish(*map);
 }
 
@@ -30,8 +29,19 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "MapNode");
     ros::NodeHandle nh;
     ros::Rate loop_rate(RATE_HZ);
-
     auto mapPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/map", 1000);
+    mapping *myMap = new lidarSensingMap(nh);  
+    ROS_INFO_STREAM("Map node up & running");
+    while(ros::ok)
+    {
+        ros::spinOnce();
+        auto map = myMap->GetMap();
+        //PrintMapInConsole(map);
+        PublicMap(map, mapPublisher);
+    }
+
+    return 0;
+}
 
     //Este bloque lo tengo que separar
     /*
@@ -49,17 +59,3 @@ int main(int argc, char **argv)
     }
     //
     */
-
-    mapping *myMap = new lidarSensingMap(nh);
-    
-    cout << "Map node up & running" << endl;
-    while(ros::ok)
-    {
-        ros::spinOnce();
-        auto map = myMap->GetMap();
-        //PrintMapInConsole(map);
-        PublicMap(map, mapPublisher);
-    }
-
-    return 0;
-}
