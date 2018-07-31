@@ -120,6 +120,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/poposhca/Documents/AutoNOMOS-Playground/build/map/cmake_install.cmake")
   include("/home/poposhca/Documents/AutoNOMOS-Playground/build/model/cmake_install.cmake")
   include("/home/poposhca/Documents/AutoNOMOS-Playground/build/heighlevelplanner/cmake_install.cmake")
+  include("/home/poposhca/Documents/AutoNOMOS-Playground/build/test/cmake_install.cmake")
   include("/home/poposhca/Documents/AutoNOMOS-Playground/build/control_low/cmake_install.cmake")
   include("/home/poposhca/Documents/AutoNOMOS-Playground/build/control/cmake_install.cmake")
 

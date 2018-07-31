@@ -22,6 +22,15 @@ void FrontTest(const ros::Publisher nh)
     nh.publish(dummyScan);
 }
 
+void BackTest(const ros::Publisher nh)
+{
+    sensor_msgs::LaserScan dummyScan;
+    dummyScan.ranges.resize(360);
+    for(int i = 90; i < 270; i++)
+        dummyScan.ranges[i] = 3;
+    nh.publish(dummyScan);
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "MapTesterNode");
@@ -29,7 +38,7 @@ int main(int argc, char **argv)
     auto mapPublisher = nh.advertise<sensor_msgs::LaserScan>("/scan", 1000);
     while(ros::ok)
     {
-        FrontTest(mapPublisher);
+        FirstCuadrantTest(mapPublisher);
     }
     return 0;
 }

@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/map.dir/simpleMapTesting.cpp.o"
+  "CMakeFiles/map.dir/mapPublisher.cpp.o"
   "/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib/map/map.pdb"
   "/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib/map/map"
 )

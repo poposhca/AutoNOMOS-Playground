@@ -166,6 +166,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+map/CMakeFiles/MAPPING.dir/rule:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f CMakeFiles/Makefile2 map/CMakeFiles/MAPPING.dir/rule
+.PHONY : map/CMakeFiles/MAPPING.dir/rule
+
+# Convenience name for target.
+MAPPING: map/CMakeFiles/MAPPING.dir/rule
+
+.PHONY : MAPPING
+
+# fast build rule for target.
+MAPPING/fast:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/build
+.PHONY : MAPPING/fast
+
+# Convenience name for target.
 map/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule:
 	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f CMakeFiles/Makefile2 map/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule
 .PHONY : map/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir/rule
@@ -269,6 +284,21 @@ rosgraph_msgs_generate_messages_eus: map/CMakeFiles/rosgraph_msgs_generate_messa
 rosgraph_msgs_generate_messages_eus/fast:
 	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build.make map/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build
 .PHONY : rosgraph_msgs_generate_messages_eus/fast
+
+# Convenience name for target.
+map/CMakeFiles/LASER.dir/rule:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f CMakeFiles/Makefile2 map/CMakeFiles/LASER.dir/rule
+.PHONY : map/CMakeFiles/LASER.dir/rule
+
+# Convenience name for target.
+LASER: map/CMakeFiles/LASER.dir/rule
+
+.PHONY : LASER
+
+# fast build rule for target.
+LASER/fast:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/LASER.dir/build.make map/CMakeFiles/LASER.dir/build
+.PHONY : LASER/fast
 
 # Convenience name for target.
 map/CMakeFiles/actionlib_msgs_generate_messages_py.dir/rule:
@@ -630,32 +660,113 @@ nav_msgs_generate_messages_py/fast:
 	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/nav_msgs_generate_messages_py.dir/build.make map/CMakeFiles/nav_msgs_generate_messages_py.dir/build
 .PHONY : nav_msgs_generate_messages_py/fast
 
-simpleMapTesting.o: simpleMapTesting.cpp.o
+MapGetters/lidarSensingMap.o: MapGetters/lidarSensingMap.cpp.o
 
-.PHONY : simpleMapTesting.o
+.PHONY : MapGetters/lidarSensingMap.o
 
 # target to build an object file
-simpleMapTesting.cpp.o:
-	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/simpleMapTesting.cpp.o
-.PHONY : simpleMapTesting.cpp.o
+MapGetters/lidarSensingMap.cpp.o:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/lidarSensingMap.cpp.o
+.PHONY : MapGetters/lidarSensingMap.cpp.o
 
-simpleMapTesting.i: simpleMapTesting.cpp.i
+MapGetters/lidarSensingMap.i: MapGetters/lidarSensingMap.cpp.i
 
-.PHONY : simpleMapTesting.i
+.PHONY : MapGetters/lidarSensingMap.i
 
 # target to preprocess a source file
-simpleMapTesting.cpp.i:
-	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/simpleMapTesting.cpp.i
-.PHONY : simpleMapTesting.cpp.i
+MapGetters/lidarSensingMap.cpp.i:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/lidarSensingMap.cpp.i
+.PHONY : MapGetters/lidarSensingMap.cpp.i
 
-simpleMapTesting.s: simpleMapTesting.cpp.s
+MapGetters/lidarSensingMap.s: MapGetters/lidarSensingMap.cpp.s
 
-.PHONY : simpleMapTesting.s
+.PHONY : MapGetters/lidarSensingMap.s
 
 # target to generate assembly for a file
-simpleMapTesting.cpp.s:
-	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/simpleMapTesting.cpp.s
-.PHONY : simpleMapTesting.cpp.s
+MapGetters/lidarSensingMap.cpp.s:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/lidarSensingMap.cpp.s
+.PHONY : MapGetters/lidarSensingMap.cpp.s
+
+MapGetters/simpleMapTesting.o: MapGetters/simpleMapTesting.cpp.o
+
+.PHONY : MapGetters/simpleMapTesting.o
+
+# target to build an object file
+MapGetters/simpleMapTesting.cpp.o:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/simpleMapTesting.cpp.o
+.PHONY : MapGetters/simpleMapTesting.cpp.o
+
+MapGetters/simpleMapTesting.i: MapGetters/simpleMapTesting.cpp.i
+
+.PHONY : MapGetters/simpleMapTesting.i
+
+# target to preprocess a source file
+MapGetters/simpleMapTesting.cpp.i:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/simpleMapTesting.cpp.i
+.PHONY : MapGetters/simpleMapTesting.cpp.i
+
+MapGetters/simpleMapTesting.s: MapGetters/simpleMapTesting.cpp.s
+
+.PHONY : MapGetters/simpleMapTesting.s
+
+# target to generate assembly for a file
+MapGetters/simpleMapTesting.cpp.s:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/MAPPING.dir/build.make map/CMakeFiles/MAPPING.dir/MapGetters/simpleMapTesting.cpp.s
+.PHONY : MapGetters/simpleMapTesting.cpp.s
+
+laser/laser.o: laser/laser.cpp.o
+
+.PHONY : laser/laser.o
+
+# target to build an object file
+laser/laser.cpp.o:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/LASER.dir/build.make map/CMakeFiles/LASER.dir/laser/laser.cpp.o
+.PHONY : laser/laser.cpp.o
+
+laser/laser.i: laser/laser.cpp.i
+
+.PHONY : laser/laser.i
+
+# target to preprocess a source file
+laser/laser.cpp.i:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/LASER.dir/build.make map/CMakeFiles/LASER.dir/laser/laser.cpp.i
+.PHONY : laser/laser.cpp.i
+
+laser/laser.s: laser/laser.cpp.s
+
+.PHONY : laser/laser.s
+
+# target to generate assembly for a file
+laser/laser.cpp.s:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/LASER.dir/build.make map/CMakeFiles/LASER.dir/laser/laser.cpp.s
+.PHONY : laser/laser.cpp.s
+
+mapPublisher.o: mapPublisher.cpp.o
+
+.PHONY : mapPublisher.o
+
+# target to build an object file
+mapPublisher.cpp.o:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/mapPublisher.cpp.o
+.PHONY : mapPublisher.cpp.o
+
+mapPublisher.i: mapPublisher.cpp.i
+
+.PHONY : mapPublisher.i
+
+# target to preprocess a source file
+mapPublisher.cpp.i:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/mapPublisher.cpp.i
+.PHONY : mapPublisher.cpp.i
+
+mapPublisher.s: mapPublisher.cpp.s
+
+.PHONY : mapPublisher.s
+
+# target to generate assembly for a file
+mapPublisher.cpp.s:
+	cd /home/poposhca/Documents/AutoNOMOS-Playground/build && $(MAKE) -f map/CMakeFiles/map.dir/build.make map/CMakeFiles/map.dir/mapPublisher.cpp.s
+.PHONY : mapPublisher.cpp.s
 
 # Help Target
 help:
@@ -668,6 +779,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... test"
 	@echo "... install/strip"
+	@echo "... MAPPING"
 	@echo "... actionlib_msgs_generate_messages_nodejs"
 	@echo "... actionlib_msgs_generate_messages_lisp"
 	@echo "... actionlib_msgs_generate_messages_eus"
@@ -675,6 +787,7 @@ help:
 	@echo "... geometry_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_eus"
+	@echo "... LASER"
 	@echo "... actionlib_msgs_generate_messages_py"
 	@echo "... geometry_msgs_generate_messages_eus"
 	@echo "... roscpp_generate_messages_cpp"
@@ -701,9 +814,18 @@ help:
 	@echo "... nav_msgs_generate_messages_nodejs"
 	@echo "... install/local"
 	@echo "... nav_msgs_generate_messages_py"
-	@echo "... simpleMapTesting.o"
-	@echo "... simpleMapTesting.i"
-	@echo "... simpleMapTesting.s"
+	@echo "... MapGetters/lidarSensingMap.o"
+	@echo "... MapGetters/lidarSensingMap.i"
+	@echo "... MapGetters/lidarSensingMap.s"
+	@echo "... MapGetters/simpleMapTesting.o"
+	@echo "... MapGetters/simpleMapTesting.i"
+	@echo "... MapGetters/simpleMapTesting.s"
+	@echo "... laser/laser.o"
+	@echo "... laser/laser.i"
+	@echo "... laser/laser.s"
+	@echo "... mapPublisher.o"
+	@echo "... mapPublisher.i"
+	@echo "... mapPublisher.s"
 .PHONY : help
 
 

@@ -35,12 +35,8 @@ private:
     void UpdateLidar(const sensor_msgs::LaserScan &msg);
     std::tuple<int, int> MapCoordenatesToGridSpace(float x, float y);
     int GridCoordentaesToCellNumber(int grid_x, int grid_y);
-    void WriteProbabilityOnGrid(int grid_x, int gird_y, int p);
-
-    void GetBeamIntersectionCells(std::vector<std::tuple<int,int>> *valid_laser_beams);
 
 public:
-
     lidarSensingMap(ros::NodeHandle nh);
     nav_msgs::OccupancyGrid* GetMap();
 };

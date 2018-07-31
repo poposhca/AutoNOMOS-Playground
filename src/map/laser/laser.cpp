@@ -2,15 +2,14 @@
 
 laser::laser()
 {
-    this->isIntersectingObstacle = false;
     this->obstacleDistance = 0.0f;
     this->obstacleCell = 0;
 }
 
 void laser::Clear()
 {
-    this->isIntersectingObstacle = false;
     this->obstacleDistance = 0.0f;
+    this->obstacleCell = 0;
 }
 
 bool laser::HasCellIndex(int cell)
@@ -21,7 +20,6 @@ bool laser::HasCellIndex(int cell)
 
 void laser::SetObstacle(float dinstance, int cell)
 {
-    this->isIntersectingObstacle = true;
     this->obstacleDistance = dinstance;
     this->obstacleCell = cell;
 }
@@ -29,7 +27,7 @@ void laser::SetObstacle(float dinstance, int cell)
 void laser::insertCell(int cellIndex, float distanceFromOrigin)
 {
     auto pair = std::pair<int, float>(cellIndex, distanceFromOrigin);
-    this->laserCells.insert(pair);
+    this->laserCells.insert(pair);  
 }
 
 void laser::WriteProbabilityOnGrid(nav_msgs::OccupancyGrid *occupancy_grid)
@@ -38,11 +36,19 @@ void laser::WriteProbabilityOnGrid(nav_msgs::OccupancyGrid *occupancy_grid)
     {
         int cell = i->first;
         float distance = i->second;
-        if(distance > this->obstacleDistance) occupancy_grid->data[cell] = 99;
+        if(distance > this->obstacleDistance)
+        {
+            float delta = occupancy_grid->data[cell] + GetProbability(distance);
+            occupancy_grid->data[cell] = delta <= 100 ? delta : 100;
+        }
     }
 }
 
-bool laser::IsIntersectingObstacle()
+float laser::GetProbability(float distance)
 {
-    return this->isIntersectingObstacle;
+    //Normal CDF
+    float std = 0.5;
+    float p = (1 + erf((distance - this->obstacleDistance) / (std * sqrt(2)))) / 2;
+    std::cout << "Probabilidad: " << p * 100 << std::endl;
+    return p * 100;
 }

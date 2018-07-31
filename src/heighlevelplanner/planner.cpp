@@ -61,7 +61,6 @@ public:
 
 void ExecuteROS(int argc, char **argv, planner *plan)
 {
-    ros::init(argc, argv, "Planner_node");
     ros::NodeHandle nh;
     ros::Subscriber sub = nh.subscribe("model/map", 1000, &planner::ReadMap, plan);
     ros::spin();
@@ -69,6 +68,7 @@ void ExecuteROS(int argc, char **argv, planner *plan)
 
 int main(int argc, char **argv)
 {
+    ros::init(argc, argv, "Planner_node");
     planner *p = new planner;
     ExecuteROS(argc, argv, p);
     //p->testing();

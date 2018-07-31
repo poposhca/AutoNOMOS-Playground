@@ -14,7 +14,8 @@ void PublicMap(const nav_msgs::OccupancyGrid* map, const ros::Publisher publishe
 
 void PrintMapInConsole(const nav_msgs::OccupancyGrid* map)
 {
-    ROS_INFO_STREAM("Imprimiendo en consola:");
+    cout << "===========================================" << endl;
+    ROS_INFO_STREAM("OcupancyGrid:");
     int i = 0;
     for(int row = 0; row < map->info.height; row++)
     {
@@ -22,6 +23,7 @@ void PrintMapInConsole(const nav_msgs::OccupancyGrid* map)
             cout << map->data[i++] << " ";
         cout << endl;
     }
+    cout << "===========================================" << endl;
 }
 
 int main(int argc, char **argv)

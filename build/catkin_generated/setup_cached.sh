@@ -7,6 +7,9 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH="/opt/ros/kinetic/lib:/opt/ros/kinetic/lib/x86_64-linux-gnu"
-export PKG_CONFIG_PATH="/opt/ros/kinetic/lib/pkgconfig:/opt/ros/kinetic/lib/x86_64-linux-gnu/pkgconfig"
+export CMAKE_PREFIX_PATH="/home/poposhca/Documents/AutoNOMOS-Playground/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/poposhca/Documents/AutoNOMOS-Playground/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD="/home/poposhca/Documents/AutoNOMOS-Playground/build"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/poposhca/Documents/AutoNOMOS-Playground/devel/share/common-lisp"
+export ROS_PACKAGE_PATH="/home/poposhca/Documents/AutoNOMOS-Playground/src:$ROS_PACKAGE_PATH"
