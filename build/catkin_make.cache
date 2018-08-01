@@ -1,2 +1,0 @@
-control:control_low:heighlevelplanner:map:model:test
--DCATKIN_DEVEL_PREFIX=/home/poposhca/Documents/AutoNOMOS-Playground/devel -DCMAKE_INSTALL_PREFIX=/home/poposhca/Documents/AutoNOMOS-Playground/install -G Unix Makefiles

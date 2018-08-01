@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC   -shared -Wl,-soname,libMAPPING.so -o /home/poposhca/Documents/AutoNOMOS-Playground/devel/lib/libMAPPING.so CMakeFiles/MAPPING.dir/MapGetters/simpleMapTesting.cpp.o CMakeFiles/MAPPING.dir/MapGetters/lidarSensingMap.cpp.o 
