@@ -6,7 +6,7 @@
 
 //Cell Comparison class
 
-bool cellComparison::operator() (const CellInfo& lhs, const CellInfo& rhs)
+bool cellComparison::operator() (const CellInfo_Past& lhs, const CellInfo_Past& rhs)
 {
     return rhs.h < lhs.h;
 }
@@ -16,7 +16,7 @@ bool cellComparison::operator() (const CellInfo& lhs, const CellInfo& rhs)
 astar::astar()
 {
     this->mapset = false;
-    this->minHeap = new std::priority_queue<CellInfo, std::vector<CellInfo>, cellComparison>();
+    this->minHeap = new std::priority_queue<CellInfo_Past, std::vector<CellInfo_Past>, cellComparison>();
 }
 
 bool astar::haveMap()
@@ -37,19 +37,21 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
     std::vector<int> *resultPath = new std::vector<int>;
 
     //Cells already evaluated
-    std::vector<CellInfo> closedSet;
+    std::vector<CellInfo_Past> closedSet;
 
     auto startCell = createCell(start, goal);
     this->minHeap->push(startCell);
     closedSet.push_back(startCell);
 
-    CellInfo actualCell;
+    CellInfo_Past actualCell;
     while(this->minHeap->size() > 0)
     {
         //Select cell to expand and push to the path
         actualCell = this->minHeap->top();
 
+#ifdef DEBUG
         std::cout << "Celda seleccionada" << actualCell.index << std::endl;
+#endif
 
         this->minHeap->pop();
         resultPath->push_back(actualCell.index);
@@ -65,7 +67,9 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
             {
                 auto newCell = createCell(cellIndex, goal);
 
+#ifdef DEBUG
                 std::cout << "A expandir" << newCell.index << std::endl;
+#endif
 
                 this->minHeap->push(newCell);
                 closedSet.push_back(newCell);
@@ -75,12 +79,12 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
     return resultPath;
 }
 
-CellInfo& astar::createCell(int value, int goal)
+CellInfo_Past& astar::createCell(int value, int goal)
 {
-    CellInfo newCell;
+    CellInfo_Past newCell;
     newCell.index = value;
     newCell.h = getDistance(value, goal);
-    CellInfo &cellRef = newCell;
+    CellInfo_Past &cellRef = newCell;
     return cellRef;
 }
 
@@ -103,7 +107,7 @@ float astar::getDistance(int value, int goal)
     return sqrt(pow(value_i - goal_i_m, 2) + pow(value_j - goal_j_m, 2));
 }
 
-bool astar::cellIsInVector(std::vector<CellInfo> &cellVector, int cellIndex)
+bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, int cellIndex)
 {
     for(auto i = cellVector.begin(); i != cellVector.end(); i++)
     {
@@ -113,7 +117,7 @@ bool astar::cellIsInVector(std::vector<CellInfo> &cellVector, int cellIndex)
     return false;
 }
 
-bool astar::cellIsInVector(std::vector<CellInfo> &cellVector, const CellInfo &cell)
+bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, const CellInfo_Past &cell)
 {
     for(auto i = cellVector.begin(); i != cellVector.end(); i++)
     {
@@ -129,19 +133,19 @@ void astar::Test()
 {
     std::cout << this->mapResolution << "," << this->mapHeight << "," << this->mapWidth << std::endl;
     
-    CellInfo c1;
+    CellInfo_Past c1;
     c1.index = 15;
 
-    CellInfo c2;
+    CellInfo_Past c2;
     c2.index = 5;
 
-    CellInfo c3;
+    CellInfo_Past c3;
     c3.index = 10;
 
-    CellInfo c4;
+    CellInfo_Past c4;
     c3.index = 2;
 
-    std::vector<CellInfo> vect;
+    std::vector<CellInfo_Past> vect;
     vect.push_back(c1);
     vect.push_back(c2);
     vect.push_back(c3);

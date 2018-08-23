@@ -6,18 +6,19 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include "search.h"
 
-struct CellInfo
+struct CellInfo_Past
 {
     //The real index in the occupancy grid
     int index;
     // The heuristic h(x) value to the goal
     float h;
+    //TODO: Add lane info data
 };
 
 class cellComparison
 {
 public:
-    bool operator() (const CellInfo& lhs, const CellInfo& rhs);
+    bool operator() (const CellInfo_Past& lhs, const CellInfo_Past& rhs);
 };
 
 class astar : public ruteExplorer
@@ -28,12 +29,12 @@ private:
     float mapResolution;
     int mapWidth;
     int mapHeight;
-    std::priority_queue<CellInfo, std::vector<CellInfo>, cellComparison> *minHeap;
+    std::priority_queue<CellInfo_Past, std::vector<CellInfo_Past>, cellComparison> *minHeap;
     //Methods
-    CellInfo& createCell(int value, int goal);
+    CellInfo_Past& createCell(int value, int goal);
     float getDistance(int value, int goal);
-    bool cellIsInVector(std::vector<CellInfo> &cellVector, int cellIndex);
-    bool cellIsInVector(std::vector<CellInfo> &cellVector, const CellInfo &cell);
+    bool cellIsInVector(std::vector<CellInfo_Past> &cellVector, int cellIndex);
+    bool cellIsInVector(std::vector<CellInfo_Past> &cellVector, const CellInfo_Past &cell);
 
 public:
     astar();

@@ -5,7 +5,7 @@ lidarSensingMap::lidarSensingMap(ros::NodeHandle nh)
 {
     ros::NodeHandle priv_nh("~");
     std::string node_name = ros::this_node::getName();
-    priv_nh.param<float>(node_name+"/laser_range_min", laser_range_min, 0.25);
+    priv_nh.param<float>(node_name+"/laser_range_min", laser_range_min, 0.15);
     priv_nh.param<float>(node_name+"/laser_range_max", laser_range_max, 6);
     priv_nh.param<float>(node_name+"/cell_resolution", cell_resolution, 0.25);
     priv_nh.param<int>(node_name+"/angle_offset", angle_offset, 90);
@@ -88,7 +88,6 @@ nav_msgs::OccupancyGrid* lidarSensingMap::GetMap()
 	for (int i = 0; i < 360; ++i)
 	{
         auto actual_laser = this->lasersGrid->at(i);
-        actual_laser.Clear();
 		h = laser_ranges[i];
 		if (h <= laser_range_max && h > laser_range_min)
 		{
@@ -97,8 +96,10 @@ nav_msgs::OccupancyGrid* lidarSensingMap::GetMap()
 			gird_coordenates = MapCoordenatesToGridSpace(x,y);
             gridCell = GridCoordentaesToCellNumber(std::get<0>(gird_coordenates), std::get<1>(gird_coordenates));
             actual_laser.SetObstacle(h, gridCell);
-            actual_laser.WriteProbabilityOnGrid(this->occupancy_grid);
 		}
+        else
+            actual_laser.Clear();
+        actual_laser.WriteProbabilityOnGrid(this->occupancy_grid);
 #ifdef DEBUGLASER
         ROS_INFO_STREAM("Datos del laser:");
         std::cout << i << "->" << this->laser_ranges[i] << std::endl;

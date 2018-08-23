@@ -117,10 +117,19 @@ include_directories(
 )
 
 ## Declare a C++ library
+
+#Library for the search algorithim
 add_library(SEARCHER
    search/astar.cpp
    search/search.h
 )
+
+add_library(GRIDMETADATA
+    GridMetadata/WorldAbstraction.cpp
+    GridMetadata/CellInfo.h
+)
+
+#Library for metadata atached to each grid cell
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -146,6 +155,7 @@ add_executable(${PROJECT_NAME} planner.cpp)
 target_link_libraries(${PROJECT_NAME}
    ${catkin_LIBRARIES}
    SEARCHER
+   GRIDMETADATA
 )
 
 #############
