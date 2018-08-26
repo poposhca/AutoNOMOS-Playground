@@ -1,12 +1,12 @@
-#include "WorldAbstraction.h"
+#include "AStarAbstraction.h"
 
-WorldAbstraction::WorldAbstraction()
+AStarAbstraction::AStarAbstraction()
 {
     this->map = new nav_msgs::OccupancyGrid();
     this->mapset = false;
 }
 
-void WorldAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
+void AStarAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
 {
     if(!this->mapset)
     {
@@ -19,7 +19,7 @@ void WorldAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
     std::copy(map.data.begin(), map.data.end(), this->map->data.begin());
 }
 
-void WorldAbstraction::Tests()
+void AStarAbstraction::Test()
 {
 
     std::cout << "TESTING -----------" << std::endl;

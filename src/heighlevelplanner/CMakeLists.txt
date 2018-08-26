@@ -118,6 +118,11 @@ include_directories(
 
 ## Declare a C++ library
 
+add_library(PLANNER
+    planner.cpp
+    planner.h
+)
+
 #Library for the search algorithim
 add_library(SEARCHER
    search/astar.cpp
@@ -125,7 +130,8 @@ add_library(SEARCHER
 )
 
 add_library(GRIDMETADATA
-    GridMetadata/WorldAbstraction.cpp
+    GridMetadata/AStarAbstraction.cpp
+    GridMetadata/WorldAbstraction.h
     GridMetadata/CellInfo.h
 )
 
@@ -139,7 +145,7 @@ add_library(GRIDMETADATA
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} planner.cpp)
+add_executable(${PROJECT_NAME} node_startup.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -154,8 +160,9 @@ add_executable(${PROJECT_NAME} planner.cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}
    ${catkin_LIBRARIES}
-   SEARCHER
+   PLANNER
    GRIDMETADATA
+   SEARCHER
 )
 
 #############
