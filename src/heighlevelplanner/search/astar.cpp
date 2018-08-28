@@ -1,35 +1,18 @@
-#include <nav_msgs/MapMetaData.h>
-#include <iostream>
-#include <vector>
-#include <cmath>
 #include "astar.h"
 
 //Cell Comparison class
 
-bool cellComparison::operator() (const CellInfo_Past& lhs, const CellInfo_Past& rhs)
+bool cellComparison::operator() (const cellSearchInfo& lhs, const cellSearchInfo& rhs)
 {
     return rhs.h < lhs.h;
 }
 
 //A* class
 
-astar::astar()
+astar::astar(WorldAbstraction *world)
 {
-    this->mapset = false;
-    this->minHeap = new std::priority_queue<CellInfo_Past, std::vector<CellInfo_Past>, cellComparison>();
-}
-
-bool astar::haveMap()
-{
-    return this->mapset;
-}
-
-void astar::setMapMetadata(const nav_msgs::OccupancyGrid& map)
-{
-    this->mapset = true;
-    this->mapResolution = map.info.resolution;
-    this->mapHeight = map.info.height;
-    this->mapWidth = map.info.width;
+    this->world = world;
+    this->minHeap = new std::priority_queue<cellSearchInfo, std::vector<cellSearchInfo>, cellComparison>();
 }
 
 std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int start, int goal)
@@ -37,27 +20,24 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
     std::vector<int> *resultPath = new std::vector<int>;
 
     //Cells already evaluated
-    std::vector<CellInfo_Past> closedSet;
+    std::vector<cellSearchInfo> closedSet;
 
     auto startCell = createCell(start, goal);
     this->minHeap->push(startCell);
     closedSet.push_back(startCell);
 
-    CellInfo_Past actualCell;
+    cellSearchInfo actualCell;
     while(this->minHeap->size() > 0)
     {
         //Select cell to expand and push to the path
         actualCell = this->minHeap->top();
-
-#ifdef DEBUG
-        std::cout << "Celda seleccionada" << actualCell.index << std::endl;
-#endif
-
         this->minHeap->pop();
         resultPath->push_back(actualCell.index);
         if(actualCell.index == goal)
                 return resultPath;
+
         //Expand neighbors
+        //TODO: DES-HARDCODEAR, ESTO ES EL QUE ROMPE EL CODIGO EN EJECUCION!!!
         for(int i = -4; i <= 4; i++)
         {
             int cellIndex = actualCell.index + i;
@@ -66,48 +46,44 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
             if(!cellAlreadyCheked && cellIsFree)
             {
                 auto newCell = createCell(cellIndex, goal);
-
-#ifdef DEBUG
-                std::cout << "A expandir" << newCell.index << std::endl;
-#endif
-
                 this->minHeap->push(newCell);
                 closedSet.push_back(newCell);
             }
         }
     }
+
     return resultPath;
 }
 
-CellInfo_Past& astar::createCell(int value, int goal)
+cellSearchInfo& astar::createCell(int value, int goal)
 {
-    CellInfo_Past newCell;
+    cellSearchInfo newCell;
     newCell.index = value;
     newCell.h = getDistance(value, goal);
-    CellInfo_Past &cellRef = newCell;
+    cellSearchInfo &cellRef = newCell;
     return cellRef;
 }
 
 float astar::getDistance(int value, int goal)
 {
-    float m = this->mapResolution / 2;
+    float m = this->world->getResolution() / 2;
 
     //Ubicacion de la celda actual
-    float value_i = value % this->mapWidth;
-    float value_j = value / this->mapWidth;
-    float value_i_m = (float)value_i * this->mapResolution + m;
-    float value_j_m = (float)value_j * this->mapResolution + m;
+    float value_i = value % this->world->getWidth();
+    float value_j = value / this->world->getWidth();
+    float value_i_m = (float)value_i * this->world->getResolution() + m;
+    float value_j_m = (float)value_j * this->world->getResolution() + m;
 
     //Ubicacion de la celda objetivo
-    int goal_i = goal % this->mapWidth;
-    int goal_j = goal / this->mapWidth;
-    float goal_i_m = (float)goal_i * this->mapResolution + m;
-    float goal_j_m = (float)goal_j * this->mapResolution + m;
+    int goal_i = goal % this->world->getWidth();
+    int goal_j = goal / this->world->getWidth();
+    float goal_i_m = (float)goal_i * this->world->getResolution() + m;
+    float goal_j_m = (float)goal_j * this->world->getResolution() + m;
 
     return sqrt(pow(value_i - goal_i_m, 2) + pow(value_j - goal_j_m, 2));
 }
 
-bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, int cellIndex)
+bool astar::cellIsInVector(std::vector<cellSearchInfo> &cellVector, int cellIndex)
 {
     for(auto i = cellVector.begin(); i != cellVector.end(); i++)
     {
@@ -117,7 +93,7 @@ bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, int cellIndex
     return false;
 }
 
-bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, const CellInfo_Past &cell)
+bool astar::cellIsInVector(std::vector<cellSearchInfo> &cellVector, const cellSearchInfo &cell)
 {
     for(auto i = cellVector.begin(); i != cellVector.end(); i++)
     {
@@ -131,21 +107,21 @@ bool astar::cellIsInVector(std::vector<CellInfo_Past> &cellVector, const CellInf
 
 void astar::Test()
 {
-    std::cout << this->mapResolution << "," << this->mapHeight << "," << this->mapWidth << std::endl;
+    std::cout << this->world->getResolution() << "," << this->world->getHeight() << "," << this->world->getWidth() << std::endl;
     
-    CellInfo_Past c1;
+    cellSearchInfo c1;
     c1.index = 15;
 
-    CellInfo_Past c2;
+    cellSearchInfo c2;
     c2.index = 5;
 
-    CellInfo_Past c3;
+    cellSearchInfo c3;
     c3.index = 10;
 
-    CellInfo_Past c4;
+    cellSearchInfo c4;
     c3.index = 2;
 
-    std::vector<CellInfo_Past> vect;
+    std::vector<cellSearchInfo> vect;
     vect.push_back(c1);
     vect.push_back(c2);
     vect.push_back(c3);

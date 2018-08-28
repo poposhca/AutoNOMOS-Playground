@@ -19,6 +19,21 @@ void AStarAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
     std::copy(map.data.begin(), map.data.end(), this->map->data.begin());
 }
 
+int AStarAbstraction::getWidth()
+{
+    return this->map->info.width;
+}
+
+int AStarAbstraction::getHeight()
+{
+    return this->map->info.height;
+}
+
+float AStarAbstraction::getResolution()
+{
+    return this->map->info.resolution;
+}
+
 void AStarAbstraction::Test()
 {
 

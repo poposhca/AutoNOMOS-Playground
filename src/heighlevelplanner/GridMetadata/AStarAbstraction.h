@@ -5,20 +5,19 @@
 #include <algorithm>
 #include <nav_msgs/OccupancyGrid.h>
 #include "WorldAbstraction.h"
-#include "CellInfo.h"
 
 class AStarAbstraction : public WorldAbstraction
 {
 private:
     nav_msgs::OccupancyGrid *map;
-    float mapResolution;
     bool mapset;
-    int mapWidth;
-    int mapHeight;
 
 public:
     AStarAbstraction();
     void setMap(const nav_msgs::OccupancyGrid&);
+    int getWidth();
+    int getHeight();
+    float getResolution();
     void Test();
 };
 

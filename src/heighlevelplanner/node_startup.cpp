@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "Planner_node");
     auto world = new AStarAbstraction();
-    auto explorer = new astar();
+    auto explorer = new astar(world);
     planner *p = new planner(world, explorer);
     ros::NodeHandle nh;
     ros::Subscriber sub = nh.subscribe("model/map", 1000, &planner::ReadMap, p);
