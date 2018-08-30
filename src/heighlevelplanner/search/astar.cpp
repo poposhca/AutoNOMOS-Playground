@@ -37,19 +37,33 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
                 return resultPath;
 
         //Expand neighbors
-        //TODO: DES-HARDCODEAR, ESTO ES EL QUE ROMPE EL CODIGO EN EJECUCION!!!
-        for(int i = -4; i <= 4; i++)
-        {
-            int cellIndex = actualCell.index + i;
-            bool cellAlreadyCheked = cellIsInVector(closedSet, cellIndex);
-            bool cellIsFree = actualMap.data[cellIndex] == 0;
-            if(!cellAlreadyCheked && cellIsFree)
+        auto cell_coordenates = getGridCoordenates(actualCell.index);
+        int vi = std::get<0>(cell_coordenates);
+        int vj = std::get<1>(cell_coordenates);
+        for(int j = -1; j <= 1; j++)
+            for(int i = -1; i <= 1; i++)
             {
-                auto newCell = createCell(cellIndex, goal);
-                this->minHeap->push(newCell);
-                closedSet.push_back(newCell);
+                //Actual cell cooredentares (i,j)
+                int actual_vi = vi + i;
+                int actual_vj = vj + j;
+
+                //Validate coordenates are insede ranges
+                bool IsCellWidthValid = 0 < actual_vi && actual_vi  < this->world->getWidth();
+                bool IsCellHeightValid = 0 < actual_vj && actual_vj < this->world->getHeight();
+                bool IsTheSameCell = actual_vi == vi && actual_vj == vj;
+                if(IsCellWidthValid && IsCellHeightValid && !IsTheSameCell)
+                {
+                    int cellIndex = getIndexFromCoordentase(actual_vi, actual_vj);
+                    bool cellAlreadyCheked = cellIsInVector(closedSet, cellIndex);
+                    bool cellIsFree = actualMap.data[cellIndex] == 0;
+                    if(!cellAlreadyCheked && cellIsFree)
+                    {
+                        auto newCell = createCell(cellIndex, goal);
+                        this->minHeap->push(newCell);
+                        closedSet.push_back(newCell);
+                    }
+                }
             }
-        }
     }
 
     return resultPath;
@@ -64,23 +78,33 @@ cellSearchInfo& astar::createCell(int value, int goal)
     return cellRef;
 }
 
+std::tuple<int,int> astar::getGridCoordenates(int value)
+{
+    float i = value % this->world->getWidth();
+    float j = value / this->world->getWidth();
+    return std::make_tuple(i, j);
+}
+
+int astar::getIndexFromCoordentase(int i, int j)
+{
+    return i * this->world->getWidth() + j;
+}
+
 float astar::getDistance(int value, int goal)
 {
     float m = this->world->getResolution() / 2;
 
     //Ubicacion de la celda actual
-    float value_i = value % this->world->getWidth();
-    float value_j = value / this->world->getWidth();
-    float value_i_m = (float)value_i * this->world->getResolution() + m;
-    float value_j_m = (float)value_j * this->world->getResolution() + m;
+    auto value_coordenates = getGridCoordenates(value);
+    float value_i_m = (float)std::get<0>(value_coordenates) * this->world->getResolution() + m;;
+    float value_j_m = (float)std::get<1>(value_coordenates) * this->world->getResolution() + m;;
 
     //Ubicacion de la celda objetivo
-    int goal_i = goal % this->world->getWidth();
-    int goal_j = goal / this->world->getWidth();
-    float goal_i_m = (float)goal_i * this->world->getResolution() + m;
-    float goal_j_m = (float)goal_j * this->world->getResolution() + m;
+    auto goal_coordenates = getGridCoordenates(goal);
+    float goal_i_m = (float)std::get<0>(goal_coordenates) * this->world->getResolution() + m;;
+    float goal_j_m = (float)std::get<1>(goal_coordenates) * this->world->getResolution() + m;;
 
-    return sqrt(pow(value_i - goal_i_m, 2) + pow(value_j - goal_j_m, 2));
+    return sqrt(pow(value_i_m - goal_i_m, 2) + pow(value_j_m - goal_j_m, 2));
 }
 
 bool astar::cellIsInVector(std::vector<cellSearchInfo> &cellVector, int cellIndex)
