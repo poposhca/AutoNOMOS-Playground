@@ -1,8 +1,0 @@
-<launch>
-
-    <node name="map" pkg="map" type="map" output="screen" > 
-    </node> 
-    <node name="test" pkg="testNode" type="testNode" output="screen" > 
-    </node> 
-
-</launch>

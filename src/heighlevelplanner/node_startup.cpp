@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     ros::Subscriber sub = nh.subscribe("model/map", 1000, &planner::ReadMap, p);
     //TODO Subscribe to Lalo's nodes
     //TODO Subscribe to LTL node
-    cout << "Heigh Level Planner node up & running" << endl;
+    ROS_INFO_STREAM("Planner node up & running");
     while(ros::ok)
     {
         ros::spinOnce();

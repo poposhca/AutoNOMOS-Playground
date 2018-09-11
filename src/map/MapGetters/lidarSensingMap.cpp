@@ -115,7 +115,7 @@ std::tuple<int,int> lidarSensingMap::MapCoordenatesToGridSpace(float x, float y)
 {
     int x_grid = (int) ((this->cells_number_by_row / 2.0f) + (x / this->cell_resolution)); 
     int y_grid = (int) ((this->cells_number_by_row / 2.0f) + (y / this->cell_resolution)); 
-    return std::make_tuple(x_grid, y_grid);
+    return std::make_tuple(x_grid, y_grid); 
 }
 
 int lidarSensingMap::GridCoordentaesToCellNumber(int grid_x, int grid_y)

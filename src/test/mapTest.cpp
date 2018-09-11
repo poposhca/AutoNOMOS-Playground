@@ -2,6 +2,8 @@
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 
+using namespace std;
+
 void FirstCuadrantTest(const ros::Publisher nh)
 {
     sensor_msgs::LaserScan dummyScan;
@@ -35,6 +37,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "MapTesterNode");
     ros::NodeHandle nh;
+    ROS_INFO_STREAM("Map-tests node publishing tests");
     auto mapPublisher = nh.advertise<sensor_msgs::LaserScan>("/scan", 1000);
     while(ros::ok)
     {
