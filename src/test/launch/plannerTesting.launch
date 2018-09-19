@@ -8,6 +8,6 @@
         <param name="testnode_test"     type="int"      value="0"/>
     </node> 
     <node name="map" pkg="map" type="map" output="screen" /> 
-    <node name="planner" pkg="planner" type="planner" output="log" />
+    <node name="planner" pkg="planner" type="planner" output="screen" />
 
 </launch>
