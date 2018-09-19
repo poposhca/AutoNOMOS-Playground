@@ -20,6 +20,7 @@ int main(int argc, char **argv)
     {
         ros::spinOnce();
         //call planner
+        p->test();
     }
     return 0;
 }

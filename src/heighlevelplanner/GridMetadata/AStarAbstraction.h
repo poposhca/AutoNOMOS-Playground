@@ -15,6 +15,8 @@ private:
 public:
     AStarAbstraction();
     void setMap(const nav_msgs::OccupancyGrid&);
+    const std::vector<int>* getMap();
+    bool getIsMapSet();
     int getWidth();
     int getHeight();
     float getResolution();

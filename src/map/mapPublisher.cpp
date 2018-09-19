@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::Rate loop_rate(RATE_HZ);
     auto mapPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/map", 1000);
-    mapping *myMap = new lidarSensingMap(nh);  
+    mapping *myMap = new lidarSensingMap(nh);
     ROS_INFO_STREAM("Map node up & running");
     while(ros::ok)
     {

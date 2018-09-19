@@ -19,7 +19,7 @@ public:
     planner(WorldAbstraction *world, ruteExplorer *explorer);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
     void PublicPath(const nav_msgs::OccupancyGrid &map, const std::vector<int> *path);
-    void testing();
+    void test();
 };
 
 #endif

@@ -1,0 +1,12 @@
+<!--
+    Test design for testing dummy lasir publication
+    It publish in the topic "scan" replacing a real lidar publication
+-->
+
+<launch>
+
+    <node name="test" pkg="testnode" type="testnode" output="screen">
+        <param name="testnode_test"     type="int"      value="2"/>
+    </node> 
+ 
+</launch>

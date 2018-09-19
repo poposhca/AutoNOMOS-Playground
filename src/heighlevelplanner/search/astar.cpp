@@ -15,7 +15,7 @@ astar::astar(WorldAbstraction *world)
     this->minHeap = new std::priority_queue<cellSearchInfo, std::vector<cellSearchInfo>, cellComparison>();
 }
 
-std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int start, int goal)
+std::vector<int>* astar::getRute(int start, int goal)
 {
     std::vector<int> *resultPath = new std::vector<int>;
 
@@ -55,7 +55,8 @@ std::vector<int>* astar::getRute(const nav_msgs::OccupancyGrid& actualMap, int s
                 {
                     int cellIndex = getIndexFromCoordentase(actual_vi, actual_vj);
                     bool cellAlreadyCheked = cellIsInVector(closedSet, cellIndex);
-                    bool cellIsFree = actualMap.data[cellIndex] == 0;
+                    auto map = this->world->getMap();
+                    bool cellIsFree = map->at(cellIndex) == 0;
                     if(!cellAlreadyCheked && cellIsFree)
                     {
                         auto newCell = createCell(cellIndex, goal);

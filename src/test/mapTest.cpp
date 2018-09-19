@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <string>
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 
@@ -37,11 +38,28 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "MapTesterNode");
     ros::NodeHandle nh;
+
+    int selectedTest;
+    ros::NodeHandle nhParamas("~");
+    nhParamas.param<int>("testnode_test", selectedTest, 0);
+
     ROS_INFO_STREAM("Map-tests node publishing tests");
     auto mapPublisher = nh.advertise<sensor_msgs::LaserScan>("/scan", 1000);
     while(ros::ok)
     {
-        FirstCuadrantTest(mapPublisher);
+        switch(selectedTest)
+        {
+            case 0:
+                FirstCuadrantTest(mapPublisher);
+                break;
+            case 1:
+                FrontTest(mapPublisher);
+                break;
+            case 2:
+                BackTest(mapPublisher);
+                break;
+        }
+        
     }
     return 0;
 }

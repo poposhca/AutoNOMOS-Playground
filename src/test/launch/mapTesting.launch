@@ -1,11 +1,13 @@
+<!--
+    Test design for testing map reading and interpretation for a laser-scan
+    It takes a laser publication a publish an occupacy grid
+-->
+
 <launch>
 
-    <node name="map" pkg="map" type="map" output="screen" > 
-
-        <param name="width"     type="int"      value="3"/>
-        <param name="height"    type="int"      value="30"/>
-        <param name="mapFile"   type="string"   value="/home/poposhca/Documents/AutoNOMOS-Playground/src/map/map.txt"/>
-
+    <node name="test" pkg="testnode" type="testnode" output="screen">
+        <param name="testnode_test"     type="int"      value="1"/>
     </node> 
- 
+    <node name="map" pkg="map" type="map" output="screen" /> 
+
 </launch>
