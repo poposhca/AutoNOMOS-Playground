@@ -5,7 +5,6 @@
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
-#include <std_msgs/Float32MultiArray.h>
 #include "GridMetadata/WorldAbstraction.h"
 #include "search/search.h"
 
@@ -15,7 +14,6 @@
 class planner
 {
 private:
-    int estado_actual;
     WorldAbstraction *world;
     ruteExplorer *explorer;
     ros::Publisher pathPublisher;

@@ -14,9 +14,42 @@ void AStarAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
         this->map->data.resize(number_cells);
         this->map->info = map.info;
         this->map->header = map.header;
+        this->metadata = new std::vector<cellMetadata>(number_cells);
         this->mapset = true;
     }
     std::copy(map.data.begin(), map.data.end(), this->map->data.begin());
+}
+
+void AStarAbstraction::setState(const std_msgs::Float32MultiArray &laneState)
+{
+    //TODO: Checar y corregir si es necesario el codigo de Lalo
+    // int estadoPrevio = this->actual_state;
+    // float max=0;
+    // for(int i = 0; i < NUM_STATES * STATE_WIDTH; i++) {
+    //     if(laneState.data[i]>max) {
+    //         max=laneState.data[i];
+    //     }
+    // }
+
+    // int countStates=0;
+    // int state = -1;
+    // for(int i = NUM_STATES * STATE_WIDTH - 1; i >= 0; i--) {
+    //     if(laneState.data[i]==max) {
+    //         int temp_state = (int)floor(i / STATE_WIDTH);
+    //         if (temp_state != state){
+    //             state = temp_state;
+    //             countStates++;
+    //         }
+    //     }
+    // }
+
+    // if (countStates==1)
+    //     this->actual_state = state;
+    // else
+    //     this->actual_state = -1; // no se pudo determinar el estado, ya que hay mas de uno posible
+
+    this->actual_state = 4;
+    std::cout << "Estado actual: " << this->name_state[this->actual_state] << std::endl;
 }
 
 const std::vector<int>* AStarAbstraction::getMap()
@@ -46,6 +79,30 @@ int AStarAbstraction::getHeight()
 float AStarAbstraction::getResolution()
 {
     return this->map->info.resolution;
+}
+
+
+void AStarAbstraction::Compute_Abstraction()
+{
+    //TODO: Des-hardcodear. Considero que siempre hay una misma distancia entre lineas de cada lado (ooops)
+    int map_cell_radious = this->map->info.width / 2;
+    int map_cells_regions = map_cell_radious / 4;
+    int stupid_count = 0;
+    for(auto i = 0; i != this->map->info.width * this->map->info.height; i++)
+    {
+        cellMetadata newMetadata;
+        if(stupid_count <= map_cells_regions)
+            newMetadata.cell_state = 3;
+        if(stupid_count <= map_cells_regions * 3 && stupid_count > map_cells_regions)
+            newMetadata.cell_state = 4;
+        if(stupid_count <= map_cells_regions * 4 && stupid_count > map_cells_regions * 3)
+        {
+            newMetadata.cell_state = 5;
+            stupid_count = -1;
+        }
+        this->metadata->at(i) = newMetadata;
+        stupid_count += 1;
+    }
 }
 
 void AStarAbstraction::Test()
