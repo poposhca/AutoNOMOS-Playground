@@ -30,7 +30,7 @@ public:
     int getHeight();
     float getResolution();
     virtual void Compute_Abstraction();
-    void Test();
+    void test();
 };
 
 #endif

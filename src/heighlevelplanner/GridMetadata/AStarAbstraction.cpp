@@ -105,30 +105,22 @@ void AStarAbstraction::Compute_Abstraction()
     }
 }
 
-void AStarAbstraction::Test()
+void AStarAbstraction::test()
 {
 
     std::cout << "TESTING -----------" << std::endl;
 
-    //Test grid info
+    //Metadata
     std::cout << "============================================" << std::endl;
-    for(auto i = this->map->data.begin(); i != this->map->data.end(); i++)
-        std::cout << *i << ", ";
-    std::cout << "" << std::endl;
+    std::cout << map->info.width << std::endl;
+    std::cout << map->info.height << std::endl;
+    std::cout << map->info.resolution << std::endl;
     std::cout << "============================================" << std::endl;
 
-    //Test metadata
-    // std::cout << "============================================" << std::endl;
-    // std::cout << map->info.width << std::endl;
-    // std::cout << map->info.height << std::endl;
-    // std::cout << map->info.resolution << std::endl;
-    // std::cout << "============================================" << std::endl;
-
-    //Test getGridMethod
+    //Grid info
     std::cout << "============================================" << std::endl;
-    auto map = this->getMap();
-    for(auto i = map->begin(); i != map->end(); i++)
-        std::cout << *i << ", ";
+    for(auto i = 0; i < this->map->data.size(); i++)
+        std::cout << "{Value: " << this->map->data.at(i) << ", State: " << this->metadata->at(i).cell_state << "},";
     std::cout << "" << std::endl;
     std::cout << "============================================" << std::endl;
 

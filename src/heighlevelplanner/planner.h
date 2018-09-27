@@ -17,13 +17,14 @@ private:
     WorldAbstraction *world;
     ruteExplorer *explorer;
     ros::Publisher pathPublisher;
+    void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
 
 public:
     planner(WorldAbstraction *world, ruteExplorer *explorer);
     void ReadLaneState(const std_msgs::Float32MultiArray &laneState);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
-    void PublicPath(const nav_msgs::OccupancyGrid &map, const std::vector<int> *path);
-    void test();
+    void CreatePlan();
+    void test(const std::vector<int> *path);
 };
 
 #endif

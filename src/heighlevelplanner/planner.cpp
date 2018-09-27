@@ -20,27 +20,42 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
     this->world->setMap(map);
 }
 
-void planner::PublicPath(const nav_msgs::OccupancyGrid &map, const std::vector<int> *path)
+void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
 {
+    std::cout << "Publishing map" << std::endl;
     nav_msgs::OccupancyGrid pathMap;
-    pathMap.data.resize(map.info.width * map.info.height);
+    pathMap.data.resize(map->size());
     fill(pathMap.data.begin(), pathMap.data.end(), -1);
     for(auto i = path->begin(); i != path->end(); i++)
-        pathMap.data[*i] = 200;
+        pathMap.data[*i] = 100;
+    pathMap.info.origin.position.x = 0;
+    pathMap.info.origin.position.y = 0;
+    pathMap.info.origin.position.z = 0;
+    pathMap.info.origin.orientation.x = 0;
+    pathMap.info.origin.orientation.y = 0;
+    pathMap.info.origin.orientation.z = 0;
+    pathMap.info.origin.orientation.w = 0;
+    pathMap.info.resolution = this->world->getResolution();
+    pathMap.info.width = this->world->getWidth();
+    pathMap.info.height = this->world->getHeight();
     this->pathPublisher.publish(pathMap);
 }
 
-void planner::test()
+void planner::CreatePlan()
 {
-    if(this->world->getIsMapSet())
-    {
-        ROS_INFO_STREAM("Performing testings:");
-        //dynamic_cast<AStarAbstraction*>(this->world)->Test();
-        auto path = explorer->getRute(0, 100);
-        for(auto i = path->begin(); i != path->end(); i++)
-            std::cout << *i << ", ";
-        std::cout << "" << std::endl;
-        std::cout << "================================" << std::endl;
-    }
-    else ROS_INFO_STREAM("Not testing");
+     if(this->world->getIsMapSet())
+     {
+        auto path = this->explorer->getRute(36, 468);
+        this->test(path);
+        this->PublicPath(this->world->getMap(), path);
+     }
+}
+
+void planner::test(const std::vector<int> *path)
+{
+    ROS_INFO_STREAM("Performing testings");
+    for(auto i = path->begin(); i != path->end(); i++)
+        std::cout << *i << ", ";
+    std::cout << "" << std::endl;
+    std::cout << "================================" << std::endl;
 }

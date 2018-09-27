@@ -19,8 +19,7 @@ int main(int argc, char **argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        //call planner
-        //p->test();
+        p->CreatePlan();
     }
     return 0;
 }

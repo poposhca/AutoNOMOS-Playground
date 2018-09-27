@@ -27,41 +27,60 @@ std::vector<int>* astar::getRute(int start, int goal)
     closedSet.push_back(startCell);
 
     cellSearchInfo actualCell;
-    while(this->minHeap->size() > 0)
+    while(this->minHeap->size() != 0)
     {
         //Select cell to expand and push to the path
         actualCell = this->minHeap->top();
+        #ifdef debugb
+        std::cout << "1) Expandir: " << actualCell.index << " con h:" << actualCell.h << std::endl;
+        #endif
         this->minHeap->pop();
         resultPath->push_back(actualCell.index);
         if(actualCell.index == goal)
                 return resultPath;
 
         //Expand neighbors
+        #ifdef debug
+        std::cout << "2) Expandir vecinos " << std::endl;
+        #endif
         auto cell_coordenates = getGridCoordenates(actualCell.index);
         int vi = std::get<0>(cell_coordenates);
         int vj = std::get<1>(cell_coordenates);
+        #ifdef debug
+        std::cout << "3) Coordenadas " << vi << "," << vj << std::endl;
+        #endif
         for(int j = -1; j <= 1; j++)
             for(int i = -1; i <= 1; i++)
             {
                 //Actual cell cooredentares (i,j)
                 int actual_vi = vi + i;
                 int actual_vj = vj + j;
+                #ifdef debug
+                std::cout << "4) Candidatos " << actual_vi << "," << actual_vj << std::endl;
+                #endif
 
                 //Validate coordenates are insede ranges
-                bool IsCellWidthValid = 0 < actual_vi && actual_vi  < this->world->getWidth();
-                bool IsCellHeightValid = 0 < actual_vj && actual_vj < this->world->getHeight();
+                bool IsCellWidthValid = 0 <= actual_vi && actual_vi  < this->world->getWidth();
+                bool IsCellHeightValid = 0 <= actual_vj && actual_vj < this->world->getHeight();
                 bool IsTheSameCell = actual_vi == vi && actual_vj == vj;
                 if(IsCellWidthValid && IsCellHeightValid && !IsTheSameCell)
                 {
                     int cellIndex = getIndexFromCoordentase(actual_vi, actual_vj);
                     bool cellAlreadyCheked = cellIsInVector(closedSet, cellIndex);
                     auto map = this->world->getMap();
-                    bool cellIsFree = map->at(cellIndex) == 0;
+                    //TODO: Make a variable for the probability!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    bool cellIsFree = map->at(cellIndex) <= 60;
+                    #ifdef debug
+                    std::cout << "5) Califica " << actual_vi << "," << actual_vj << "en celda " << cellIndex << "con p=" << map->at(cellIndex) << std::endl;
+                    #endif
                     if(!cellAlreadyCheked && cellIsFree)
                     {
                         auto newCell = createCell(cellIndex, goal);
                         this->minHeap->push(newCell);
                         closedSet.push_back(newCell);
+                        #ifdef debug
+                        std::cout << "6) To expand: " << newCell.index << "whit h: " << newCell.h << std::endl;
+                        #endif
                     }
                 }
             }
@@ -88,7 +107,7 @@ std::tuple<int,int> astar::getGridCoordenates(int value)
 
 int astar::getIndexFromCoordentase(int i, int j)
 {
-    return i * this->world->getWidth() + j;
+    return j * (this->world->getWidth() - 1) + i;
 }
 
 float astar::getDistance(int value, int goal)
