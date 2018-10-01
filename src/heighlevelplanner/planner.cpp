@@ -58,4 +58,6 @@ void planner::test(const std::vector<int> *path)
         std::cout << *i << ", ";
     std::cout << "" << std::endl;
     std::cout << "================================" << std::endl;
+    char control;
+    std::cin >> control;
 }
