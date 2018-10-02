@@ -22,12 +22,12 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 
 void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
 {
-    std::cout << "Publishing map" << std::endl;
+    std::cout << "Publishing map de: " << map->size() << std::endl;
     nav_msgs::OccupancyGrid pathMap;
     pathMap.data.resize(map->size());
     fill(pathMap.data.begin(), pathMap.data.end(), -1);
     for(auto i = path->begin(); i != path->end(); i++)
-        pathMap.data[*i] = 100;
+        pathMap.data[*i] = 200;
     pathMap.info.origin.position.x = 0;
     pathMap.info.origin.position.y = 0;
     pathMap.info.origin.position.z = 0;
@@ -45,9 +45,9 @@ void planner::CreatePlan()
 {
      if(this->world->getIsMapSet())
      {
-        auto path = this->explorer->getRute(36, 468);
-        this->test(path);
+        auto path = this->explorer->getRute(36, 2292);
         this->PublicPath(this->world->getMap(), path);
+        this->test(path);
      }
 }
 

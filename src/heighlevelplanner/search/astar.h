@@ -35,12 +35,16 @@ class astar : public ruteExplorer
 {
 private:
     //Properties
+    int *lastGoalFound;
     WorldAbstraction *world;
     std::map<int, cellSearchInfo*> *cellsCreated;
     std::map<int, cellSearchInfo*> *closedSet;
     std::priority_queue<cellSearchInfo*, std::vector<cellSearchInfo*>, cellComparison> *minHeap;
-    //Helper methods
+    //Main methods
+    bool validRouteExists(int start, int goal, int* outStart);
+    std::vector<int>* search(int start, int goal);
     std::vector<int>* reconstruct_path(int actualCell);
+    //Helper methods
     cellSearchInfo* createCell(int value, int origin, int goal, float g_value);
     void updateCell(cellSearchInfo* cell, float g_value);
     bool cellIsInVector(std::map<int, cellSearchInfo*> *cellVector, int cellIndex);
@@ -51,7 +55,7 @@ private:
 public:
     astar(WorldAbstraction *world);
     void setMapMetadata(const nav_msgs::OccupancyGrid&);
-    std::vector<int>* getRute(int, int);
+    std::vector<int>* getRute(int start, int goal);
     void Test();
 };
 

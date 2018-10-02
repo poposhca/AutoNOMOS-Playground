@@ -10,8 +10,11 @@ bool cellComparison::operator() (const cellSearchInfo* lhs, const cellSearchInfo
 
 //A* class
 
+//Main methods
+
 astar::astar(WorldAbstraction *world)
 {
+    this->lastGoalFound = new int;
     this->world = world;
     this->cellsCreated = new std::map<int, cellSearchInfo*>;
     this->closedSet = new std::map<int, cellSearchInfo*>;
@@ -19,6 +22,45 @@ astar::astar(WorldAbstraction *world)
 }
 
 std::vector<int>* astar::getRute(int start, int goal)
+{
+    int startSearchingCellValue = start;
+    int *startSearchingCell = &startSearchingCellValue;
+    bool isAlreadyARoute = validRouteExists(start, goal, startSearchingCell);
+    if(isAlreadyARoute)
+        return reconstruct_path(goal);
+    return search(*startSearchingCell, goal);
+}
+
+bool astar::validRouteExists(int start, int goal, int* outStart)
+{
+    *outStart = start;
+
+    //No path was created
+    if(this->cellsCreated->size() == 0)
+        return false;
+    
+    bool goalIsTheSameAsLastTime = goal == *(this->lastGoalFound);
+    std::cout << "Last goal: " << *(this->lastGoalFound) << std::endl;
+    bool thereIsNoObstacle = true;
+    auto map = this->world->getMap();
+    auto cell = this->cellsCreated->at(goal);
+    while(cell->fatherIndex != -1)
+    {
+        int index = cell->index;
+        //TODO The p parameter!!!!!!!S
+        if(map->at(index) > 50)
+        {
+            *outStart = index;
+            thereIsNoObstacle = false;
+            std::cout << "Obstacle: " << index << std::endl;
+        }
+        cell = this->cellsCreated->at(cell->fatherIndex);
+    }
+    std::cout << "VALIDACION " << (goalIsTheSameAsLastTime && thereIsNoObstacle ? "true" : "false") << std::endl;
+    return goalIsTheSameAsLastTime && thereIsNoObstacle;
+}
+
+std::vector<int>* astar::search(int start, int goal)
 {
     auto startCell = createCell(start, -1, goal, 0);
     this->minHeap->push(startCell);
@@ -38,7 +80,10 @@ std::vector<int>* astar::getRute(int start, int goal)
 
         //Goal reached
         if(actualCell->index == goal)
-                return reconstruct_path(goal);
+        {
+            *(this->lastGoalFound) = actualCell->index;
+            return reconstruct_path(goal);
+        }
 
         //Expand neighbors
         #ifdef debugb
@@ -72,7 +117,7 @@ std::vector<int>* astar::getRute(int start, int goal)
                         float tmp_g = actualCell->g + getDistance(actualCell->index, cellIndex);
                         bool cellAlreadyCreated = cellIsInVector(this->cellsCreated, cellIndex);
                         //TODO: Make a variable for the probability!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        bool cellIsFree = map->at(cellIndex) <= 200;
+                        bool cellIsFree = map->at(cellIndex) <= 50;
                         #ifdef debug
                         std::cout << "5) Califica " << actual_vi << "," << actual_vj << " en celda " << cellIndex << " con p=" << map->at(cellIndex) << std::endl;
                         #endif
@@ -107,6 +152,9 @@ std::vector<int>* astar::getRute(int start, int goal)
     }
 
     //Partial result
+   
+    *(this->lastGoalFound) = actualCell->index;
+    std::cout << "Result cell: " <<  actualCell->index << " lastfound " << *(this->lastGoalFound) << std::endl;
     return reconstruct_path(actualCell->index);
 }
 
@@ -156,7 +204,7 @@ std::tuple<int,int> astar::getGridCoordenates(int value)
 
 int astar::getIndexFromCoordentase(int i, int j)
 {
-    return j * (this->world->getWidth() - 1) + i;
+    return j * this->world->getWidth() + i;
 }
 
 float astar::getDistance(int value, int goal)
