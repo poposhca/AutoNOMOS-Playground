@@ -1,5 +1,4 @@
 #include "planner.h"
-#include "GridMetadata/AStarAbstraction.h"
 
 planner::planner(WorldAbstraction *world, ruteExplorer *explorer)
 {
@@ -18,6 +17,7 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 {
     std::cout << "Reading map" << std::endl;
     this->world->setMap(map);
+    this->world->Compute_Abstraction();
 }
 
 void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
@@ -45,18 +45,33 @@ void planner::CreatePlan()
 {
      if(this->world->getIsMapSet())
      {
-        auto path = this->explorer->getRute(36, 2292);
+        auto path = this->explorer->getRute(1128, 2280);
+        auto plann = this->world->getStatesChain(path);
+
+        //Testing
         this->PublicPath(this->world->getMap(), path);
-        this->test(path);
+        this->test(path, plann);
      }
 }
 
-void planner::test(const std::vector<int> *path)
+void planner::test(const std::vector<int> *path, const std::vector<std::string> *plann)
 {
     ROS_INFO_STREAM("Performing testings");
+
+    if(path == NULL)
+        return;
+    std::cout << "Searched states:" << std::endl;
     for(auto i = path->begin(); i != path->end(); i++)
         std::cout << *i << ", ";
     std::cout << "" << std::endl;
+
+    if(plann == NULL)
+        return;
+    std::cout << "Hiegh level plan:" << std::endl;
+    for(auto i = plann->begin(); i != plann->end(); i++)
+         std::cout << *i << ", ";
+    std::cout << "" << std::endl;
+
     std::cout << "================================" << std::endl;
     char control;
     std::cin >> control;

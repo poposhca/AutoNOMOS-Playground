@@ -9,7 +9,9 @@ void FirstCuadrantTest(const ros::Publisher nh)
 {
     sensor_msgs::LaserScan dummyScan;
     dummyScan.ranges.resize(360);
-    for(int i = 0; i < 90; i++)
+    for(int i = 0; i < 25; i++)
+        dummyScan.ranges[i] = 3;
+    for(int i = 180; i < 360; i++)
         dummyScan.ranges[i] = 3;
     nh.publish(dummyScan);
 }
@@ -31,6 +33,13 @@ void BackTest(const ros::Publisher nh)
     dummyScan.ranges.resize(360);
     for(int i = 90; i < 270; i++)
         dummyScan.ranges[i] = 3;
+    nh.publish(dummyScan);
+}
+
+void EmptyTest(const ros::Publisher nh)
+{
+    sensor_msgs::LaserScan dummyScan;
+    dummyScan.ranges.resize(360);
     nh.publish(dummyScan);
 }
 
@@ -57,6 +66,9 @@ int main(int argc, char **argv)
                 break;
             case 2:
                 BackTest(mapPublisher);
+                break;
+            case 4:
+                EmptyTest(mapPublisher);
                 break;
         }
         

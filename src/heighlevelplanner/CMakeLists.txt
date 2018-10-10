@@ -130,8 +130,8 @@ add_library(SEARCHER
 )
 
 add_library(GRIDMETADATA
-    GridMetadata/AStarAbstraction.cpp
-    GridMetadata/WorldAbstraction.h
+    GridMetadata/TwoLaneAbstraction.cpp
+    GridMetadata/TwoLaneAbstraction.h
 )
 
 #Library for metadata atached to each grid cell

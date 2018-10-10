@@ -24,7 +24,7 @@ public:
     void ReadLaneState(const std_msgs::Float32MultiArray &laneState);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
     void CreatePlan();
-    void test(const std::vector<int> *path);
+    void test(const std::vector<int> *path, const std::vector<std::string> *plann);
 };
 
 #endif

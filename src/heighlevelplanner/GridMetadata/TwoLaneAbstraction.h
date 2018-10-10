@@ -1,12 +1,11 @@
-#ifndef __ASTARABSTRACTION_H__
-#define __ASTARABSTRACTION_H__
+#ifndef __TwoLaneAbstraction_H__
+#define __TwoLaneAbstraction_H__
 
 #include <iostream>
 #include <algorithm>
-#include <string>
 #include "WorldAbstraction.h"
 
-class AStarAbstraction : public WorldAbstraction
+class TwoLaneAbstraction : public WorldAbstraction
 {
 private:
     struct cellMetadata
@@ -14,14 +13,14 @@ private:
         //The most probable state for the cell
         int cell_state;
     };
-    std::string name_state [7] = { "OL",   "LL",   "LC",   "CC",   "RC",   "RR",   "OR"};
+    std::string name_state[7] = { "OL",   "LL",   "LC",   "CC",   "RC",   "RR",   "OR"};
     nav_msgs::OccupancyGrid *map;
     std::vector<cellMetadata> *metadata;
     int actual_state;
     bool mapset;
 
 public:
-    AStarAbstraction();
+    TwoLaneAbstraction();
     void setMap(const nav_msgs::OccupancyGrid&);
     void setState(const std_msgs::Float32MultiArray &laneState);
     const std::vector<int>* getMap();
@@ -29,7 +28,8 @@ public:
     int getWidth();
     int getHeight();
     float getResolution();
-    virtual void Compute_Abstraction();
+    std::vector<std::string>* getStatesChain(std::vector<int> *chain);
+    void Compute_Abstraction();
     void test();
 };
 

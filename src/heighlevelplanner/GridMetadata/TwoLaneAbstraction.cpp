@@ -1,12 +1,12 @@
-#include "AStarAbstraction.h"
+#include "TwoLaneAbstraction.h"
 
-AStarAbstraction::AStarAbstraction()
+TwoLaneAbstraction::TwoLaneAbstraction()
 {
     this->map = new nav_msgs::OccupancyGrid();
     this->mapset = false;
 }
 
-void AStarAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
+void TwoLaneAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
 {
     if(!this->mapset)
     {
@@ -20,7 +20,7 @@ void AStarAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
     std::copy(map.data.begin(), map.data.end(), this->map->data.begin());
 }
 
-void AStarAbstraction::setState(const std_msgs::Float32MultiArray &laneState)
+void TwoLaneAbstraction::setState(const std_msgs::Float32MultiArray &laneState)
 {
     //TODO: Checar y corregir si es necesario el codigo de Lalo
     // int estadoPrevio = this->actual_state;
@@ -52,7 +52,7 @@ void AStarAbstraction::setState(const std_msgs::Float32MultiArray &laneState)
     std::cout << "Estado actual: " << this->name_state[this->actual_state] << std::endl;
 }
 
-const std::vector<int>* AStarAbstraction::getMap()
+const std::vector<int>* TwoLaneAbstraction::getMap()
 {
     auto mapCopy = new std::vector<int>;
     int number_cells = this->map->info.width * this->map->info.height;
@@ -61,51 +61,66 @@ const std::vector<int>* AStarAbstraction::getMap()
     return mapCopy;
 }
 
-bool AStarAbstraction::getIsMapSet()
+bool TwoLaneAbstraction::getIsMapSet()
 {
     return this->mapset;
 }
 
-int AStarAbstraction::getWidth()
+int TwoLaneAbstraction::getWidth()
 {
     return this->map->info.width;
 }
 
-int AStarAbstraction::getHeight()
+int TwoLaneAbstraction::getHeight()
 {
     return this->map->info.height;
 }
 
-float AStarAbstraction::getResolution()
+float TwoLaneAbstraction::getResolution()
 {
     return this->map->info.resolution;
 }
 
+std::vector<std::string>* TwoLaneAbstraction::getStatesChain(std::vector<int> *chain)
+{
+    if(chain == NULL)
+        return NULL;
+    if(chain->size() == 0) 
+        return NULL;
+    
+    std::vector<std::string> *resultChain = new std::vector<std::string>();
+    for(auto i = chain->begin(); i != chain->end(); i++)
+    {
+        auto state_metadata = this->metadata->at(*i);
+        auto name = this->name_state[state_metadata.cell_state];
+        resultChain->push_back(name);
+    }
+    return resultChain;
+}
 
-void AStarAbstraction::Compute_Abstraction()
+void TwoLaneAbstraction::Compute_Abstraction()
 {
     //TODO: Des-hardcodear. Considero que siempre hay una misma distancia entre lineas de cada lado (ooops)
-    int map_cell_radious = this->map->info.width / 2;
-    int map_cells_regions = map_cell_radious / 4;
+    int map_cells_regions = this->map->info.width / 4;
     int stupid_count = 0;
     for(auto i = 0; i != this->map->info.width * this->map->info.height; i++)
     {
         cellMetadata newMetadata;
         if(stupid_count <= map_cells_regions)
             newMetadata.cell_state = 3;
-        if(stupid_count <= map_cells_regions * 3 && stupid_count > map_cells_regions)
+        if(stupid_count <= map_cells_regions * 2 && stupid_count > map_cells_regions)
             newMetadata.cell_state = 4;
-        if(stupid_count <= map_cells_regions * 4 && stupid_count > map_cells_regions * 3)
-        {
+        if(stupid_count <= map_cells_regions * 3 && stupid_count > map_cells_regions * 4)
             newMetadata.cell_state = 5;
-            stupid_count = -1;
-        }
+        if(stupid_count == this->map->info.width - 1)
+            stupid_count = 0;
+        else
+            stupid_count += 1;
         this->metadata->at(i) = newMetadata;
-        stupid_count += 1;
     }
 }
 
-void AStarAbstraction::test()
+void TwoLaneAbstraction::test()
 {
 
     std::cout << "TESTING -----------" << std::endl;

@@ -3,6 +3,7 @@
 
 #include <nav_msgs/OccupancyGrid.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <string>
 #include <vector>
 
 class WorldAbstraction
@@ -15,6 +16,7 @@ public:
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
     virtual float getResolution() = 0;
+    virtual std::vector<std::string>* getStatesChain(std::vector<int> *chain) = 0;
     virtual void Compute_Abstraction() = 0;
 };
 
