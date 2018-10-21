@@ -74,5 +74,5 @@ void planner::test(const std::vector<int> *path, const std::vector<std::string> 
 
     std::cout << "================================" << std::endl;
     char control;
-    std::cin >> control;
+    //std::cin >> control;
 }

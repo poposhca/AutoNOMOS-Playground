@@ -1,0 +1,10 @@
+<launch>
+
+    <node name="test" pkg="testnode" type="testnode_car" output="log" />
+    <node name="control" pkg="control" type="control" output="screen"> 
+        <param name="control_kp"     type="double"      value="5.0"/>
+        <param name="control_ka"     type="double"      value="5.5"/>
+        <param name="control_kb"     type="double"      value="-1.0"/>
+    </node>
+
+</launch>
