@@ -1,5 +1,10 @@
 #include <ros/ros.h>
 #include "controllers/pose_controller.h"
+#include "model/ackerman.h"
+
+void UpdateNextPose(const geometry_msgs::Pose2D &msg);
+void UpdatePose(const geometry_msgs::Pose2D &msg);
+
 
 int main(int argc, char **argv)
 {
@@ -7,7 +12,11 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::NodeHandle nhPrivate("~");
     //ros::Rate rate(1); 
-    //Control parameters
+
+    //Model
+    AckermanModel ackerman(1);
+
+    //Controller
     float kp;
     float ka;
     float kv;
@@ -30,5 +39,4 @@ int main(int argc, char **argv)
         l.PrintAllParameters();
         //rate.sleep();
     }
-
 }
