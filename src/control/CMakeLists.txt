@@ -119,6 +119,16 @@ add_library(CONTROLLERS
     controllers/pose_controller.h
 )
 
+add_library(MODEL
+    model/ackerman.cpp
+    model/ackerman.h
+)
+
+add_library(CONTROL
+    control.cpp
+    control.h
+)
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -142,7 +152,13 @@ add_executable(control control_node.cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME} 
     ${catkin_LIBRARIES} 
+    CONTROL
+)
+
+target_link_libraries(CONTROL 
+    ${catkin_LIBRARIES} 
     CONTROLLERS
+    MODEL
 )
 
 #############

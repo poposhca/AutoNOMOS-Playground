@@ -25,7 +25,6 @@ public:
     //Ros variables
     ros::Publisher pubVel;
     ros::Publisher pubSteer;
-    ros::Subscriber GoalPose;
     ros::Subscriber SimulationPose;
 
     //Actual pose
@@ -52,12 +51,14 @@ public:
     float ka;
     float kb;
     
-    Pose_Controller(ros::NodeHandle nh, float kp, float ka, float kb);
+    Pose_Controller();
     void toPolar();
-    void SendMessage();
+    //void SendMessage();
+    float getVelocity();
+    float getSteering();
     void setActualParameters();
-    void UpdateNextPose(const geometry_msgs::Pose2D &msg);
-    void UpdatePose(const geometry_msgs::Pose2D &msg);
+    void UpdateNextPose(float x, float y, float theta);
+    void UpdateActualPose(float x, float y, float theta);
     void PrintAllParameters();
 
 };

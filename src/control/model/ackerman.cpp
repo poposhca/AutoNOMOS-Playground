@@ -17,19 +17,11 @@ void AckermanModel::UpdateParaemters(float velocity, float steering)
 
 float* AckermanModel::getPoints(float delta_time)
 {
+    std::cout << "In class: " << v_x << ',' << v_y << ',' << delta_time << std::endl;
     float *points = new float[3];
     points[0] = v_x * delta_time;
     points[1] = v_y * delta_time;
     points[2] = v_theta * delta_time;
+    std::cout << "In class: " << points[0] << ',' << points[1] << ',' << points[2] << std::endl;
     return points;
-}
-
-
-int main()
-{
-    AckermanModel test(1);
-    test.UpdateParaemters(5,0);
-    float *res = test.getPoints(5);
-    std::cout << res[0] << ',' << res[1] << ',' << res[2] << std::endl;
-    return 0;
 }
