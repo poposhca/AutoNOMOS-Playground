@@ -18,8 +18,8 @@ int main(int argc, char **argv)
     ros::Publisher posePub = nh.advertise<geometry_msgs::Pose2D>("robot/next_pose", 1000);
     ros::Subscriber poseSub = nh.subscribe("/AutoNOMOS_simulation/real_pose", 1000, &PrintRobotPose);
     geometry_msgs::Pose2D testPose;
-    testPose.x = 0.0;
-    testPose.y = 15.0;
+    testPose.x = 15.0;
+    testPose.y = 0.0;
     testPose.theta = 0.0;
     while(ros::ok())
     {

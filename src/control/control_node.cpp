@@ -15,7 +15,8 @@ int main(int argc, char **argv)
     while(ros::ok())
     {
         ros::spinOnce();
-        main_algorithm.NextIteration();
+        if(main_algorithm.goalSet)
+            main_algorithm.NextIteration();
         //rate.sleep();
     }
 }

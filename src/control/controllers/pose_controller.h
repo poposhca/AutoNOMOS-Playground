@@ -35,7 +35,7 @@ public:
     //Goal pose
     float goalx;
     float goaly;
-    float goalTheta;
+    float goalTheta; //In radians
 
     //Polar coordenates
     float ro;
