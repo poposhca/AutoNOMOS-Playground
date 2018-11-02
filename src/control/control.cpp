@@ -17,10 +17,7 @@ void Control::NextIteration()
     {
         this->controller->UpdateActualPose(this->model->actual_x, this->model->actual_y, this->model->actual_theta);
         this->controller->UpdateNextPose(this->goalx, this->goaly, this->goalTheta);
-        //TODO: This part must be inside controller
-        this->controller->toPolar();
         this->controller->setActualParameters();
-        //
         float v = this->controller->getVelocity();
         float gamma = this->controller->getSteering();
         float gamma_radians = gamma * PI / 180;

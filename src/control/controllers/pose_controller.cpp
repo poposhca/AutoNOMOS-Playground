@@ -23,17 +23,18 @@ void Pose_Controller::toPolar()
     //Calcular ro
     float dx = pow(x - goalx, 2);
     float dy = pow(y - goaly, 2);
-    ro = sqrt(dx + dy);
+    this->ro = sqrt(dx + dy);
 
     //Calcular alpha
-    alpha = atan(dy / dx) - theta;
+    this->alpha = atan(dy / dx) - theta;
 
     //Calcular beta
-    beta =  - theta - alpha + angles::from_degrees(goalTheta);
+    this->beta =  - theta - alpha + angles::from_degrees(goalTheta);
 }
 
 void Pose_Controller::setActualParameters()
 {
+    toPolar();
     v = kp * ro;
     gamma = ka * alpha + kb * beta;
 }

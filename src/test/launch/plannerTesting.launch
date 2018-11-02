@@ -1,12 +1,5 @@
-<!--
-    Test design for creating a path to avoid a front-right obstacle 
-    (the first cuadrant)
--->
 <launch>
 
-    <node name="test" pkg="testnode" type="testnode" output="log">
-        <param name="testnode_test"     type="int"      value="0"/>
-    </node> 
     <node name="map" pkg="map" type="map" output="log" /> 
     <node name="planner" pkg="planner" type="planner" output="screen" />
 
