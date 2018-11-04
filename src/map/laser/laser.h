@@ -9,7 +9,9 @@
 class laser
 {
 private:
+    //The grid graph
     std::map<int, float> laserCells;
+    //Properties setted if there is an obstacle
     float obstacleDistance;
     int obstacleCell;
 public:

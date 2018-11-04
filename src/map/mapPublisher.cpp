@@ -44,20 +44,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-    //Este bloque lo tengo que separar
-    /*
-    int width;
-    int height;
-    string file;
-    ros::NodeHandle nhParamas("~");
-    nhParamas.param<int>("width", width, 0);
-    nhParamas.param<int>("height", height, 0);
-    nhParamas.param<string>("mapFile", file, "");
-    if(width == 0 && height == 0)
-    {
-        cout << "Empty Map!!!" << endl;
-        return -9;
-    }
-    //
-    */

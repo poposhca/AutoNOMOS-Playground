@@ -37,14 +37,14 @@ void laser::WriteProbabilityOnGrid(nav_msgs::OccupancyGrid *occupancy_grid)
         int cell = i->first;
         float distance = i->second;
         float newProbability = 0;
-        //Obtener nueva probabilidad
+        //Get new probability
         if(this->obstacleDistance == 0)
             newProbability = occupancy_grid->data[cell] - GetProbability(0);
         else if(distance < this->obstacleDistance)
             newProbability = occupancy_grid->data[cell] - GetProbability(distance);
         else
             newProbability = occupancy_grid->data[cell] + GetProbability(distance);
-        //Checar cotas superior e inferior
+        //Valid probability constrains
         if(newProbability < 0) 
             newProbability = 0;
         if(newProbability > 100) 
@@ -59,7 +59,13 @@ void laser::WriteProbabilityOnGrid(nav_msgs::OccupancyGrid *occupancy_grid)
 float laser::GetProbability(float distance)
 {
     //Normal CDF
-    float std = 0.5;
-    float p = (1 + erf((distance - this->obstacleDistance) / (std * sqrt(2)))) / 2;
+    float mean = 0.0f;
+    float std = 2.5f;
+    //Cut normla distribution by 2std
+    float p;
+    if(distance - mean <= 2 * std)
+        p = (1 + erf((distance - mean) / (std * sqrt(2)))) / 2;
+    else
+        p = 0;
     return p * 100;
 }

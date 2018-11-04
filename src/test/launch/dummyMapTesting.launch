@@ -1,4 +1,5 @@
 <!--
+    THIS TEST MUST BE RUN USING THE MOCKING TEST NODE
     Test design for testing dummy lasir publication
     It publish in the topic "scan" replacing a real lidar publication
 -->

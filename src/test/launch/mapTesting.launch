@@ -1,4 +1,5 @@
 <!--
+    THIS TEST MUST BE RUN USING GAZEBO SIMULATIO OR THE REAL CAR
     Test design for testing map reading and interpretation for a laser-scan
     It takes a laser publication a publish an occupacy grid
 -->
