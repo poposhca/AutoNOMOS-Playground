@@ -3,11 +3,14 @@
 #include "GridMetadata/TwoLaneAbstraction.h"
 #include "search/astar.h"
 
+#define RATE_HZ 5
+
 using namespace std;
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "Planner_node");
+    ros::Rate loop_rate(RATE_HZ);
     auto world = new TwoLaneAbstraction();
     auto explorer = new astar(world);
     planner *p = new planner(world, explorer);
@@ -20,6 +23,7 @@ int main(int argc, char **argv)
     {
         ros::spinOnce();
         p->CreatePlan();
+        loop_rate.sleep();
     }
     return 0;
 }
