@@ -7,7 +7,11 @@
 <launch>
 
     <node name="test" pkg="testnode" type="testnode" output="screen">
-        <param name="testnode_test"     type="int"      value="2"/>
+        <param name="testnode_test"     type="int"      value="0"/>
     </node> 
+    <node name="map" pkg="map" type="map" output="screen">
+        <param name="map/cell_resolution"     type="double"      value="2" />
+        <param name="map/laser_range_max"     type="double"      value="6" />
+    </node>
  
 </launch>

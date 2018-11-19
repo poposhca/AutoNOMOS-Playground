@@ -10,7 +10,6 @@ using namespace std;
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "Planner_node");
-    ros::Rate loop_rate(RATE_HZ);
     auto world = new TwoLaneAbstraction();
     auto explorer = new astar(world);
     planner *p = new planner(world, explorer);
@@ -19,6 +18,7 @@ int main(int argc, char **argv)
     ros::Subscriber sub2 = nh.subscribe("model/map", 1000, &planner::ReadMap, p);
     //TODO Subscribe to LTL node
     ROS_INFO_STREAM("Planner node up & running");
+    ros::Rate loop_rate(RATE_HZ);
     while(ros::ok)
     {
         ros::spinOnce();

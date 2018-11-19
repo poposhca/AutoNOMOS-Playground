@@ -59,13 +59,13 @@ void laser::WriteProbabilityOnGrid(nav_msgs::OccupancyGrid *occupancy_grid)
 float laser::GetProbability(float distance)
 {
     //Normal CDF
-    float mean = 0.0f;
+    float mean = distance;
     float std = 2.5f;
     //Cut normla distribution by 2std
     float p;
     if(distance - mean <= 2 * std)
         p = (1 + erf((distance - mean) / (std * sqrt(2)))) / 2;
     else
-        p = 0;
+        p = 60;
     return p * 100;
 }

@@ -1,8 +1,7 @@
 #include "astar.h"
-#define debugc
+#define debug
 
 //Cell Comparison class
-
 bool cellComparison::operator() (const cellSearchInfo* lhs, const cellSearchInfo* rhs)
 {
     return rhs->f < lhs->f;
@@ -23,12 +22,23 @@ astar::astar(WorldAbstraction *world)
 
 std::vector<int>* astar::getRute(int start, int goal)
 {
-    int startSearchingCellValue = start;
+    std::cout << "lastfound: " << *(this->lastGoalFound) << " goal: " << goal << std::endl;
+    /*int startSearchingCellValue = start;
     int *startSearchingCell = &startSearchingCellValue;
     bool isAlreadyARoute = validRouteExists(start, goal, startSearchingCell);
     if(isAlreadyARoute)
         return reconstruct_path(goal);
-    return search(*startSearchingCell, goal);
+    else
+    {
+        this->cellsCreated->clear();
+        this->closedSet->clear();
+        while(this->minHeap->size() != 0) this->minHeap->pop();
+        return search(*startSearchingCell, goal);
+    }*/
+    this->cellsCreated->clear();
+    this->closedSet->clear();
+    while(this->minHeap->size() != 0) this->minHeap->pop();
+    return search(start, goal);
 }
 
 bool astar::validRouteExists(int start, int goal, int* outStart)
@@ -40,7 +50,6 @@ bool astar::validRouteExists(int start, int goal, int* outStart)
         return false;
     
     bool goalIsTheSameAsLastTime = goal == *(this->lastGoalFound);
-    std::cout << "Last goal: " << *(this->lastGoalFound) << std::endl;
     bool thereIsNoObstacle = true;
     auto map = this->world->getMap();
     auto cell = this->cellsCreated->at(goal);
@@ -50,6 +59,7 @@ bool astar::validRouteExists(int start, int goal, int* outStart)
         //TODO The p parameter!!!!!!!S
         if(map->at(index) > 50)
         {
+            std::cout << "Searching index: " << index << std::endl;
             *outStart = index;
             thereIsNoObstacle = false;
             std::cout << "Obstacle: " << index << std::endl;
@@ -74,19 +84,25 @@ std::vector<int>* astar::search(int start, int goal)
         actualCell = this->minHeap->top();
         this->minHeap->pop();
         this->closedSet->emplace(actualCell->index, actualCell);
+
         #ifdef debug
         std::cout << "1) Expandir: " << actualCell->index << " con f:" << actualCell->f << std::endl;
+        char control;
+        std::cin >> control;
         #endif
 
         //Goal reached
         if(actualCell->index == goal)
         {
             *(this->lastGoalFound) = actualCell->index;
+            #ifdef debugc
+            std::cout << "TARGET FOUND" << std::endl;
+            #endif
             return reconstruct_path(goal);
         }
 
         //Expand neighbors
-        #ifdef debugb
+        #ifdef debugc
         std::cout << "2) Expandir vecinos " << std::endl;
         #endif
         auto cell_coordenates = getGridCoordenates(actualCell->index);
@@ -101,7 +117,7 @@ std::vector<int>* astar::search(int start, int goal)
                 //Actual cell cooredentares (i,j)
                 int actual_vi = vi + i;
                 int actual_vj = vj + j;
-                #ifdef debugb
+                #ifdef debugc
                 std::cout << "4) Candidatos " << actual_vi << "," << actual_vj << std::endl;
                 #endif
                 //Validate coordenates are insede ranges
@@ -117,8 +133,8 @@ std::vector<int>* astar::search(int start, int goal)
                         float tmp_g = actualCell->g + getDistance(actualCell->index, cellIndex);
                         bool cellAlreadyCreated = cellIsInVector(this->cellsCreated, cellIndex);
                         //TODO: Make a variable for the probability!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        bool cellIsFree = map->at(cellIndex) <= 50;
-                        #ifdef debug
+                        bool cellIsFree = map->at(cellIndex) <= 50 && map->at(cellIndex) >= 0;
+                        #ifdef debugc
                         std::cout << "5) Califica " << actual_vi << "," << actual_vj << " en celda " << cellIndex << " con p=" << map->at(cellIndex) << std::endl;
                         #endif
                         if(!cellAlreadyCreated && cellIsFree)
@@ -127,10 +143,10 @@ std::vector<int>* astar::search(int start, int goal)
                             this->cellsCreated->emplace(newCell->index, newCell);
                             this->minHeap->push(newCell);
                             #ifdef debug
-                            std::cout << "6.1) To expand: " << newCell->index << "whit f: " << newCell->f << std::endl;
+                            std::cout << "6.1) To expand new: " << newCell->index << "whit f: " << newCell->f << std::endl;
                             #endif
                         }
-                        else if(cellAlreadyCreated)
+                        else if(cellAlreadyCreated && cellIsFree)
                         {
                             auto neighbor_cell = this->cellsCreated->at(cellIndex);
                             bool better_path = tmp_g < neighbor_cell->g;
@@ -138,23 +154,22 @@ std::vector<int>* astar::search(int start, int goal)
                             {
                                 updateCell(neighbor_cell, tmp_g);
                                 #ifdef debug
-                                std::cout << "6.2) To expand: " << neighbor_cell.index << "whit f: " << neighbor_cell.f << std::endl;
+                                std::cout << "6.2) To expand existing: " << neighbor_cell->index << "whit f: " << neighbor_cell->f << std::endl;
                                 #endif
                             }
                         }
                     }
                 }
             }
-    #ifdef debug
-    char control;
-    std::cin >> control;
-    #endif
     }
 
     //Partial result
    
     *(this->lastGoalFound) = actualCell->index;
-    std::cout << "Result cell: " <<  actualCell->index << " lastfound " << *(this->lastGoalFound) << std::endl;
+    #ifdef debugc
+        std::cout << "Result cell: " <<  actualCell->index << " lastfound: " << *(this->lastGoalFound) << " goal: " << goal << std::endl;
+        std::cout << "minheap-size: " << this->minHeap->size() << std::endl;
+    #endif
     return reconstruct_path(actualCell->index);
 }
 
@@ -180,7 +195,7 @@ cellSearchInfo* astar::createCell(int value, int origin, int goal, float g_value
     newCell->g = g_value;
     newCell->h = getDistance(value, goal);
     newCell->f = newCell->g + newCell->h;
-    #ifdef debug
+    #ifdef debugc
     std::cout << "  From: " << newCell->fatherIndex << std::endl;
     std::cout << "  Valor g(x) " << newCell->g << std::endl;
     std::cout << "  Valor h(x) " << newCell->h << std::endl;

@@ -4,11 +4,10 @@
 lidarSensingMap::lidarSensingMap(ros::NodeHandle nh)
 {
     ros::NodeHandle priv_nh("~");
-    std::string node_name = ros::this_node::getName();
-    priv_nh.param<float>(node_name+"/laser_range_min", laser_range_min, 0.0);
-    priv_nh.param<float>(node_name+"/laser_range_max", laser_range_max, 6);
-    priv_nh.param<float>(node_name+"/cell_resolution", cell_resolution, 0.25);
-    priv_nh.param<int>(node_name+"/angle_offset", angle_offset, 90);
+    priv_nh.param<float>("map/laser_range_min", laser_range_min, 0.5);
+    priv_nh.param<float>("map/laser_range_max", laser_range_max, 6);
+    priv_nh.param<float>("map/cell_resolution", cell_resolution, 0.25);
+    priv_nh.param<int>("map/angle_offset", angle_offset, 90);
     InitOccupancyGrid();
     ROS_INFO_STREAM("Iniciando Pre-procesamiento:");
     InitLasersPreProcessing();

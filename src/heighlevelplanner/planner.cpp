@@ -15,7 +15,7 @@ void planner::ReadLaneState(const std_msgs::Float32MultiArray &laneState)
 
 void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 {
-    std::cout << "Reading map" << std::endl;
+    //std::cout << "Reading map" << std::endl;
     this->world->setMap(map);
     this->world->Compute_Abstraction();
 }
@@ -25,7 +25,7 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
     std::cout << "Publishing map de: " << map->size() << std::endl;
     nav_msgs::OccupancyGrid pathMap;
     pathMap.data.resize(map->size());
-    fill(pathMap.data.begin(), pathMap.data.end(), -1);
+    fill(pathMap.data.begin(), pathMap.data.end(), 0);
     for(auto i = path->begin(); i != path->end(); i++)
         pathMap.data[*i] = 200;
     pathMap.info.origin.position.x = 0;
@@ -46,17 +46,18 @@ void planner::CreatePlan()
      if(this->world->getIsMapSet())
      {
         auto path = this->explorer->getRute(1128, 2280);
+        //auto path = this->explorer->getRute(2, 33);
         auto plann = this->world->getStatesChain(path);
-
-        //Testing
         this->PublicPath(this->world->getMap(), path);
+
+        //Logg results for testing
         this->test(path, plann);
      }
 }
 
 void planner::test(const std::vector<int> *path, const std::vector<std::string> *plann)
 {
-    ROS_INFO_STREAM("Performing testings");
+    ROS_INFO_STREAM("Logging results");
 
     if(path == NULL)
         return;
@@ -74,5 +75,5 @@ void planner::test(const std::vector<int> *path, const std::vector<std::string> 
 
     std::cout << "================================" << std::endl;
     char control;
-    //std::cin >> control;
+    std::cin >> control;
 }
