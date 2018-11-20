@@ -1,5 +1,4 @@
 #include "astar.h"
-#define debug
 
 //Cell Comparison class
 bool cellComparison::operator() (const cellSearchInfo* lhs, const cellSearchInfo* rhs)

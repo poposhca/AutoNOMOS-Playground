@@ -6,7 +6,7 @@
 
 <launch>
 
-    <node name="test" pkg="testnode" type="testnode" output="screen">
+    <node name="test" pkg="testnode" type="testnode_map" output="screen">
         <param name="testnode_test"     type="int"      value="0"/>
     </node> 
     <node name="map" pkg="map" type="map" output="screen">

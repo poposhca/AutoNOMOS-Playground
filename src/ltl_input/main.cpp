@@ -3,7 +3,6 @@
 #include <string>
 #include <spot/tl/parse.hh>
 #include <spot/tl/print.hh>
-#include <spot/twaalgos/translate.hh>
 
 #define RATE_HZ 5
 
