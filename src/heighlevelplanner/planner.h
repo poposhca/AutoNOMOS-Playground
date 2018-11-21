@@ -1,11 +1,13 @@
 #ifndef __PLANNER_H__
 #define __PLANNER_H__
 
+#include <tuple>
 #include <algorithm>
 #include <ros/ros.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
 #include "GridMetadata/WorldAbstraction.h"
+#include "selectGoal/selectGoal.h"
 #include "search/search.h"
 
 #define NUM_STATES 7

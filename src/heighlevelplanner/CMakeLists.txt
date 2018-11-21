@@ -134,6 +134,11 @@ add_library(GRIDMETADATA
     GridMetadata/TwoLaneAbstraction.h
 )
 
+add_library(GOALSELECTER
+    selectGoal/selectGoal.cpp
+    selectGoal/selectGoal.h
+)
+
 #Library for metadata atached to each grid cell
 
 ## Add cmake target dependencies of the library
@@ -162,6 +167,7 @@ target_link_libraries(${PROJECT_NAME}
    PLANNER
    GRIDMETADATA
    SEARCHER
+   GOALSELECTER
 )
 
 #############

@@ -45,13 +45,16 @@ void planner::CreatePlan()
 {
      if(this->world->getIsMapSet())
      {
-        auto path = this->explorer->getRute(1128, 2280);
-        //auto path = this->explorer->getRute(2, 33);
+        int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
+        //TODO: add state verification cycle
+        SelectGoal goalSelector(this->world);
+        int goal = goalSelector.getGoal();
+        auto path = this->explorer->getRute(start, goal);
         auto plann = this->world->getStatesChain(path);
         this->PublicPath(this->world->getMap(), path);
 
         //Logg results for testing
-        this->test(path, plann);
+        //this->test(path, plann);
      }
 }
 

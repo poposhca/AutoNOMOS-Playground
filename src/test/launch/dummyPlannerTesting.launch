@@ -5,7 +5,7 @@
 <launch>
 
     <node name="test" pkg="testnode" type="testnode_map" output="log">
-        <param name="testnode_test"     type="int"      value="4"/>
+        <param name="testnode_test"     type="int"      value="0"/>
     </node> 
     <node name="map" pkg="map" type="map" output="log">
         <param name="map/cell_resolution"     type="double"      value="2" />
