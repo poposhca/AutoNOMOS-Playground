@@ -139,6 +139,17 @@ add_library(GOALSELECTER
     selectGoal/selectGoal.h
 )
 
+add_library(EXPLORER
+    explore/Controller/pose_controller.cpp
+    explore/Controller/pose_controller.h
+    explore/Model/ackerman.cpp
+    explore/Model/ackerman.h
+    explore/search_tree.cpp
+    explore/search_tree.h
+    explore/explorer.cpp
+    explore/explorer.h
+)
+
 #Library for metadata atached to each grid cell
 
 ## Add cmake target dependencies of the library
@@ -168,6 +179,7 @@ target_link_libraries(${PROJECT_NAME}
    GRIDMETADATA
    SEARCHER
    GOALSELECTER
+   EXPLORER
 )
 
 #############

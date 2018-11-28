@@ -1,17 +1,23 @@
-#include "control.h"
+#include "explorer.h"
 
-Control::Control(int modelType)
+Explorer::Explorer(float car_throttle, float map_resolution, std::vector<std::string> *plan)
 {
-    this->time = 5;
-    ros::NodeHandle nh;
+    this->time = map_resolution / car_throttle;
     this->model = new AckermanModel(1);
     this->controller = new Pose_Controller();
-    this->GoalPose = nh.subscribe("robot/next_pose", 1000, &Control::UpdateNextPose, this);
-    this->goalSet = false;
+    this->statesTree = new searchTree();
 }
 
-void Control::NextIteration()
+void Explorer::SetGoal(float x, float y, float theta)
 {
+    this->goalx =x;
+    this->goaly = y;
+    this->goalTheta = theta;
+}
+
+void Explorer::Explor()
+{
+    int actual_state = 0;
     bool goal_reached = false;
     while(!goal_reached)
     {
@@ -39,15 +45,7 @@ void Control::NextIteration()
     std::cout << "GLORIA" << std::endl;
 }
 
-void Control::UpdateNextPose(const geometry_msgs::Pose2D &msg)
-{
-    this->goalSet = true;
-    this->goalx = msg.x;
-    this->goaly = msg.y;
-    this->goalTheta = msg.theta;
-}
-
-bool Control::IsInGoal(float actual_x, float actual_y)
+bool Explorer::IsInGoal(float actual_x, float actual_y)
 {
     float dif_x = actual_x * this->goal_accept_zone;
     float dif_y = actual_y * this->goal_accept_zone;
