@@ -81,21 +81,40 @@ float TwoLaneAbstraction::getResolution()
     return this->map->info.resolution;
 }
 
-std::vector<std::string>* TwoLaneAbstraction::getStatesChain(std::vector<int> *chain)
+std::vector<std::tuple<std::string, int>>* TwoLaneAbstraction::getStatesChain(std::vector<int> *chain)
 {
     if(chain == NULL)
         return NULL;
     if(chain->size() == 0) 
         return NULL;
     
-    std::vector<std::string> *resultChain = new std::vector<std::string>();
-    for(auto i = chain->begin(); i != chain->end(); i++)
+    auto *resultChain = new std::vector<std::tuple<std::string, int>>;
+    for(auto actual_state = chain->begin(); actual_state != chain->end(); actual_state++)
     {
-        auto state_metadata = this->metadata->at(*i);
+        //Get actual state name
+        auto state_metadata = this->metadata->at(*actual_state);
         auto name = this->name_state[state_metadata.cell_state];
-        resultChain->push_back(name);
+        //Get next state index if existis
+        auto next_state_ptr = actual_state + 1;
+        int next_state = state_metadata.cell_state;
+        if(next_state_ptr != chain->end()) 
+            next_state = this->metadata->at(*next_state_ptr).cell_state;
+        //Create and set new state tuple <state name, control signal>
+        auto control_signal = getControlSignal(state_metadata.cell_state, next_state);
+        auto newStateTuple = std::make_tuple(name, control_signal);
+        resultChain->push_back(newStateTuple);
     }
     return resultChain;
+}
+
+int TwoLaneAbstraction::getControlSignal(int actual_state, int next_state)
+{
+    if(actual_state == next_state) 
+        return 0;
+    if(actual_state > next_state) 
+        return 1;
+    if(actual_state < next_state) 
+        return -1;
 }
 
 void TwoLaneAbstraction::Compute_Abstraction()

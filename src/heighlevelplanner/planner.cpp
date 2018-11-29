@@ -54,11 +54,11 @@ void planner::CreatePlan()
         this->PublicPath(this->world->getMap(), path);
 
         //Logg results for testing
-        //this->test(path, plann);
+        this->test(path, plann);
      }
 }
 
-void planner::test(const std::vector<int> *path, const std::vector<std::string> *plann)
+void planner::test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann)
 {
     ROS_INFO_STREAM("Logging results");
 
@@ -73,7 +73,7 @@ void planner::test(const std::vector<int> *path, const std::vector<std::string> 
         return;
     std::cout << "Hiegh level plan:" << std::endl;
     for(auto i = plann->begin(); i != plann->end(); i++)
-         std::cout << *i << ", ";
+         std::cout << "(" << std::get<0>(*i) << "," << std::get<1>(*i) << "), ";
     std::cout << "" << std::endl;
 
     std::cout << "================================" << std::endl;

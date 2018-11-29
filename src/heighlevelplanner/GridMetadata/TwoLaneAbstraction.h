@@ -1,6 +1,7 @@
 #ifndef __TwoLaneAbstraction_H__
 #define __TwoLaneAbstraction_H__
 
+#include <tuple>
 #include <iostream>
 #include <algorithm>
 #include "WorldAbstraction.h"
@@ -13,7 +14,8 @@ private:
         //The most probable state for the cell
         int cell_state;
     };
-    std::string name_state[7] = { "OL",   "LL",   "LC",   "CC",   "RC",   "RR",   "OR"};
+    std::string name_state[7] = {"OL",   "LL",   "LC",   "CC",   "RC",   "RR",   "OR"};
+    int getControlSignal(int actual_state, int next_state);
     nav_msgs::OccupancyGrid *map;
     std::vector<cellMetadata> *metadata;
     int actual_state;
@@ -28,7 +30,7 @@ public:
     int getWidth();
     int getHeight();
     float getResolution();
-    std::vector<std::string>* getStatesChain(std::vector<int> *chain);
+    std::vector<std::tuple<std::string, int>>* getStatesChain(std::vector<int> *chain);
     void Compute_Abstraction();
     void test();
 };

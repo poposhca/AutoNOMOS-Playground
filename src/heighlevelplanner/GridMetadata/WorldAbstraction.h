@@ -16,7 +16,7 @@ public:
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
     virtual float getResolution() = 0;
-    virtual std::vector<std::string>* getStatesChain(std::vector<int> *chain) = 0;
+    virtual std::vector<std::tuple<std::string, int>>* getStatesChain(std::vector<int> *chain) = 0;
     virtual void Compute_Abstraction() = 0;
 };
 
