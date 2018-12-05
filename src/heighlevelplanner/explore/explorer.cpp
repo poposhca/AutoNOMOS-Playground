@@ -3,10 +3,19 @@
 Explorer::Explorer(float car_throttle, ros::NodeHandle nh)
 {
     //this->time = map_resolution / car_throttle;
+    this->car_throttle = car_throttle;
     this->model = new AckermanModel(1);
     this->controller = new Pose_Controller();
     this->statesTree = new searchTree();
     this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
+    this->throttlePublisher = nh.advertise<std_msgs::Int16>("/manual_control/speed", 1000);
+}
+
+void Explorer::StartMoving()
+{
+    std_msgs::Int16 throttleMessage;
+    throttleMessage.data = this->car_throttle;
+    this->throttlePublisher.publish(throttleMessage);
 }
 
 void Explorer::PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann)

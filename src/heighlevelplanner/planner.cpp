@@ -44,6 +44,7 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
 
 void planner::CreatePlan()
 {
+    explorer->StartMoving();
      if(this->world->getIsMapSet())
      {
         int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
@@ -53,11 +54,14 @@ void planner::CreatePlan()
         auto path = this->searcher->getRute(start, goal);
         auto plann = this->world->getStatesChain(path);
 
+        //Public control signal
+        this->explorer->PublishNextCOntrol(plann);
+
         //Public to Rviz
         this->PublicPath(this->world->getMap(), path);
 
         //Logg results for testing
-        this->test(path, plann);
+        //this->test(path, plann);
      }
 }
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <ros/ros.h>
+#include <std_msgs/Int16.h>
 #include <std_msgs/Float64.h>
 #include "search_tree.h"
 #include "Model/ackerman.h"
@@ -18,16 +19,19 @@ private:
     float goalx;
     float goaly;
     float goalTheta;
+    float car_throttle;
     AckermanModel *model;
     Pose_Controller *controller;
     searchTree *statesTree;
     float goal_accept_zone;
     ros::Publisher constrolSignalPublisher;
+    ros::Publisher throttlePublisher;
     bool IsInGoal(float actual_x, float actual_y);
 
 public:
     Explorer(float car_throttle, ros::NodeHandle nh);
     void PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann);
+    void StartMoving();
     void SetGoal(float x, float y, float theta);
     void Explor();
 };

@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     auto world = new TwoLaneAbstraction();
     auto searcher = new astar(world);
-    auto explorer = new Explorer(-8, nh);
+    auto explorer = new Explorer(-50, nh);
     planner *p = new planner(world, searcher, explorer);
     ros::Subscriber sub1 = nh.subscribe("/localization_array", 1000, &planner::ReadLaneState, p);
     ros::Subscriber sub2 = nh.subscribe("model/map", 1000, &planner::ReadMap, p);
