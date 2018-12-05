@@ -1,11 +1,20 @@
 #include "explorer.h"
 
-Explorer::Explorer(float car_throttle, float map_resolution, std::vector<std::string> *plan)
+Explorer::Explorer(float car_throttle, ros::NodeHandle nh)
 {
-    this->time = map_resolution / car_throttle;
+    //this->time = map_resolution / car_throttle;
     this->model = new AckermanModel(1);
     this->controller = new Pose_Controller();
     this->statesTree = new searchTree();
+    this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
+}
+
+void Explorer::PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann)
+{
+    int controlSignal = std::get<1>(plann->at(0));
+    std_msgs::Float64 controlMessage;
+    controlMessage.data = controlSignal;
+    this->constrolSignalPublisher.publish(controlMessage);
 }
 
 void Explorer::SetGoal(float x, float y, float theta)

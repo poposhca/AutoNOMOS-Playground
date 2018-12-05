@@ -1,9 +1,10 @@
 #include "planner.h"
 
-planner::planner(WorldAbstraction *world, ruteExplorer *explorer)
+planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *explorer)
 {
     ros::NodeHandle nh;
     this->world = world;
+    this->searcher = searcher;
     this->explorer = explorer;
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
 }
@@ -49,8 +50,10 @@ void planner::CreatePlan()
         //TODO: add state verification cycle
         SelectGoal goalSelector(this->world);
         int goal = goalSelector.getGoal();
-        auto path = this->explorer->getRute(start, goal);
+        auto path = this->searcher->getRute(start, goal);
         auto plann = this->world->getStatesChain(path);
+
+        //Public to Rviz
         this->PublicPath(this->world->getMap(), path);
 
         //Logg results for testing

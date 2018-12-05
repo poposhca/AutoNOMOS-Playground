@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <tuple>
+#include <ros/ros.h>
+#include <std_msgs/Float64.h>
 #include "search_tree.h"
 #include "Model/ackerman.h"
 #include "Controller/pose_controller.h"
@@ -19,10 +22,12 @@ private:
     Pose_Controller *controller;
     searchTree *statesTree;
     float goal_accept_zone;
+    ros::Publisher constrolSignalPublisher;
     bool IsInGoal(float actual_x, float actual_y);
 
 public:
-    Explorer(float car_throttle, float map_resolution, std::vector<std::string> *plan);
+    Explorer(float car_throttle, ros::NodeHandle nh);
+    void PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann);
     void SetGoal(float x, float y, float theta);
     void Explor();
 };
