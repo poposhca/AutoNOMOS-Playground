@@ -1,6 +1,6 @@
 #include "explorer.h"
 
-Explorer::Explorer(float car_throttle, ros::NodeHandle nh)
+Explorer::Explorer(float car_throttle, std::string speedTopic, std::string angleTopic,ros::NodeHandle nh)
 {
     //this->time = map_resolution / car_throttle;
     this->car_throttle = car_throttle;
@@ -8,7 +8,7 @@ Explorer::Explorer(float car_throttle, ros::NodeHandle nh)
     this->controller = new Pose_Controller();
     this->statesTree = new searchTree();
     this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
-    this->throttlePublisher = nh.advertise<std_msgs::Int16>("/manual_control/speed", 1000);
+    this->throttlePublisher = nh.advertise<std_msgs::Int16>(speedTopic, 1000);
 }
 
 void Explorer::StartMoving()

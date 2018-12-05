@@ -29,7 +29,7 @@ private:
     bool IsInGoal(float actual_x, float actual_y);
 
 public:
-    Explorer(float car_throttle, ros::NodeHandle nh);
+    Explorer(float car_throttle, std::string speedTopic, std::string angleTopic,ros::NodeHandle nh);
     void PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann);
     void StartMoving();
     void SetGoal(float x, float y, float theta);
