@@ -9,6 +9,7 @@ Explorer::Explorer(float car_throttle, std::string speedTopic, std::string angle
     this->statesTree = new searchTree();
     this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
     this->throttlePublisher = nh.advertise<std_msgs::Int16>(speedTopic, 1000);
+    this->steeringPublisher = nh.advertise<std_msgs::Int16>(angleTopic, 1000);
 }
 
 void Explorer::StartMoving()
@@ -21,9 +22,14 @@ void Explorer::StartMoving()
 void Explorer::PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann)
 {
     int controlSignal = std::get<1>(plann->at(0));
-    std_msgs::Float64 controlMessage;
-    controlMessage.data = controlSignal;
-    this->constrolSignalPublisher.publish(controlMessage);
+    std_msgs::Int16 controlMessage;
+    if(controlSignal == 0)
+        controlMessage.data = 0;
+    else
+        controlMessage.data = controlSignal == -1 ? -30 : 30;
+    this->steeringPublisher.publish(controlMessage);
+    // controlMessage.data = controlSignal;
+    // this->constrolSignalPublisher.publish(controlMessage);
 }
 
 void Explorer::SetGoal(float x, float y, float theta)

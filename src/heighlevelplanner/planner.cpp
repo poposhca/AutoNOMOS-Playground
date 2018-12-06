@@ -44,7 +44,7 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
 
 void planner::CreatePlan()
 {
-    explorer->StartMoving();
+    explorer->StartMoving();  
      if(this->world->getIsMapSet())
      {
         int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);

@@ -26,6 +26,7 @@ private:
     float goal_accept_zone;
     ros::Publisher constrolSignalPublisher;
     ros::Publisher throttlePublisher;
+    ros::Publisher steeringPublisher;
     bool IsInGoal(float actual_x, float actual_y);
 
 public:
