@@ -1,6 +1,10 @@
 <launch>
 
-    <node name="map" pkg="map" type="map" output="log" /> 
+    <node name="map" pkg="map" type="map" output="log">
+        <param name="map/cell_resolution"     type="double"      value="2" />
+        <param name="map/laser_range_max"     type="double"      value="6" />
+    </node>
+
     <node name="planner" pkg="planner" type="planner" output="screen" />
 
 </launch>

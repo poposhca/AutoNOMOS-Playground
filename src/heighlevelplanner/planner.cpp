@@ -61,7 +61,7 @@ void planner::CreatePlan()
         this->PublicPath(this->world->getMap(), path);
 
         //Logg results for testing
-        //this->test(path, plann);
+        this->test(path, plann);
      }
 }
 
@@ -84,6 +84,6 @@ void planner::test(const std::vector<int> *path, const std::vector<std::tuple<st
     std::cout << "" << std::endl;
 
     std::cout << "================================" << std::endl;
-    char control;
-    std::cin >> control;
+    // char control;
+    // std::cin >> control;
 }

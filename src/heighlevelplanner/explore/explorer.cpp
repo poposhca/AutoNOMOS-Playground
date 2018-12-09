@@ -21,12 +21,12 @@ void Explorer::StartMoving()
 
 void Explorer::PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann)
 {
-    int controlSignal = std::get<1>(plann->at(0));
+    int controlSignal = std::get<1>(plann->at(1));
     std_msgs::Int16 controlMessage;
     if(controlSignal == 0)
-        controlMessage.data = 0;
+        controlMessage.data = 90;
     else
-        controlMessage.data = controlSignal == -1 ? -30 : 30;
+        controlMessage.data = controlSignal == -1 ? -30 + 90 : 30 + 90;
     this->steeringPublisher.publish(controlMessage);
     // controlMessage.data = controlSignal;
     // this->constrolSignalPublisher.publish(controlMessage);
