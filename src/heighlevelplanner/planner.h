@@ -4,6 +4,7 @@
 #include <tuple>
 #include <algorithm>
 #include <ros/ros.h>
+#include <std_msgs/Float32MultiArray.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
 #include "GridMetadata/WorldAbstraction.h"
@@ -25,7 +26,7 @@ private:
 
 public:
     planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *explorer);
-    void ReadLaneState(const std_msgs::Float32MultiArray &laneState);
+    void ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
     void CreatePlan();
     void test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann);

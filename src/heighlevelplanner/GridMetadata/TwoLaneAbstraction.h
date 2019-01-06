@@ -20,13 +20,15 @@ private:
     std::vector<cellMetadata> *metadata;
     int actual_state;
     bool mapset;
+    bool stateSet;
 
 public:
     TwoLaneAbstraction();
     void setMap(const nav_msgs::OccupancyGrid&);
-    void setState(const std_msgs::Float32MultiArray &laneState);
+    void setState(const int laneStates);
     const std::vector<int>* getMap();
     bool getIsMapSet();
+    bool getStateIsSet();
     int getWidth();
     int getHeight();
     float getResolution();

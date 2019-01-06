@@ -4,6 +4,7 @@ TwoLaneAbstraction::TwoLaneAbstraction()
 {
     this->map = new nav_msgs::OccupancyGrid();
     this->mapset = false;
+    this->stateSet = false;
 }
 
 void TwoLaneAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
@@ -20,36 +21,16 @@ void TwoLaneAbstraction::setMap(const nav_msgs::OccupancyGrid& map)
     std::copy(map.data.begin(), map.data.end(), this->map->data.begin());
 }
 
-void TwoLaneAbstraction::setState(const std_msgs::Float32MultiArray &laneState)
+void TwoLaneAbstraction::setState(const int laneStates)
 {
-    //TODO: Checar y corregir si es necesario el codigo de Lalo
-    // int estadoPrevio = this->actual_state;
-    // float max=0;
-    // for(int i = 0; i < NUM_STATES * STATE_WIDTH; i++) {
-    //     if(laneState.data[i]>max) {
-    //         max=laneState.data[i];
-    //     }
-    // }
+    if(!this->stateSet)
+        this->stateSet = true;
+    this->actual_state = laneStates;
+}
 
-    // int countStates=0;
-    // int state = -1;
-    // for(int i = NUM_STATES * STATE_WIDTH - 1; i >= 0; i--) {
-    //     if(laneState.data[i]==max) {
-    //         int temp_state = (int)floor(i / STATE_WIDTH);
-    //         if (temp_state != state){
-    //             state = temp_state;
-    //             countStates++;
-    //         }
-    //     }
-    // }
-
-    // if (countStates==1)
-    //     this->actual_state = state;
-    // else
-    //     this->actual_state = -1; // no se pudo determinar el estado, ya que hay mas de uno posible
-
-    this->actual_state = 4;
-    std::cout << "Estado actual: " << this->name_state[this->actual_state] << std::endl;
+bool TwoLaneAbstraction::getStateIsSet()
+{
+    return this->stateSet;
 }
 
 const std::vector<int>* TwoLaneAbstraction::getMap()
@@ -119,22 +100,16 @@ int TwoLaneAbstraction::getControlSignal(int actual_state, int next_state)
 
 void TwoLaneAbstraction::Compute_Abstraction()
 {
-    //TODO: Des-hardcodear. Considero que siempre hay una misma distancia entre lineas de cada lado (ooops)
-    int map_cells_regions = this->map->info.width / 4;
-    int stupid_count = 0;
-    for(auto i = 0; i != this->map->info.width * this->map->info.height; i++)
+    int visible_states = 3;
+    int state_offset = 2;
+    int map_cells_regions = this->map->info.width / visible_states;
+    int actual_state = 0;
+    for(int i = 0; i != this->map->info.width * this->map->info.height; i++)
     {
+        int grid_cell_offset = i % (int)this->map->info.resolution;
+        int cell_offset_state = grid_cell_offset / visible_states;
         cellMetadata newMetadata;
-        if(stupid_count <= map_cells_regions)
-            newMetadata.cell_state = 3;
-        if(stupid_count <= map_cells_regions * 2 && stupid_count > map_cells_regions)
-            newMetadata.cell_state = 4;
-        if(stupid_count <= map_cells_regions * 3 && stupid_count > map_cells_regions * 4)
-            newMetadata.cell_state = 5;
-        if(stupid_count == this->map->info.width - 1)
-            stupid_count = 0;
-        else
-            stupid_count += 1;
+        newMetadata.cell_state = cell_offset_state + state_offset ;
         this->metadata->at(i) = newMetadata;
     }
 }

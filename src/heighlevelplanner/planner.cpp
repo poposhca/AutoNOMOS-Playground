@@ -9,21 +9,19 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *expl
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
 }
 
-void planner::ReadLaneState(const std_msgs::Float32MultiArray &laneState)
+void planner::ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array)
 {
-    this->world->setState(laneState);
+    auto state = loacalization_array.data.at(0);
+    this->world->setState(state);
 }
 
 void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 {
-    //std::cout << "Reading map" << std::endl;
     this->world->setMap(map);
-    this->world->Compute_Abstraction();
 }
 
 void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
 {
-    std::cout << "Publishing map de: " << map->size() << std::endl;
     nav_msgs::OccupancyGrid pathMap;
     pathMap.data.resize(map->size());
     fill(pathMap.data.begin(), pathMap.data.end(), 0);
@@ -44,9 +42,9 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
 
 void planner::CreatePlan()
 {
-    explorer->StartMoving();  
-     if(this->world->getIsMapSet())
-     {
+    if(this->world->getIsMapSet() && this->world->getStateIsSet())
+    {
+        this->world->Compute_Abstraction();
         int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
         //TODO: add state verification cycle
         SelectGoal goalSelector(this->world);
@@ -62,7 +60,7 @@ void planner::CreatePlan()
 
         //Logg results for testing
         this->test(path, plann);
-     }
+    }
 }
 
 void planner::test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann)

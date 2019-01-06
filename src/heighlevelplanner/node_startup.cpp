@@ -24,13 +24,13 @@ int main(int argc, char **argv)
     //Set planner components
     auto world = new TwoLaneAbstraction();
     auto searcher = new astar(world);
-    auto explorer = new Explorer(-50, speedTopic, steerTopic, nh);
-    planner *p = new planner(world, searcher, explorer);
+    auto explorer = new Explorer(-100, speedTopic, steerTopic, nh);
+    auto *planner_algorithm = new planner(world, searcher, explorer);
     //TODO Subscribe to LTL node
 
     //Subscribe to topics
-    ros::Subscriber sub1 = nh.subscribe("/localization_array", 1000, &planner::ReadLaneState, p);
-    ros::Subscriber sub2 = nh.subscribe("model/map", 1000, &planner::ReadMap, p);
+    ros::Subscriber subscribe_localization = nh.subscribe("/localization_array_test", 1000, &planner::ReadLaneState, planner_algorithm);
+    ros::Subscriber subscribe_map = nh.subscribe("model/map", 1000, &planner::ReadMap, planner_algorithm);
 
     //Start main algorithmr
     ROS_INFO_STREAM("Planner node up & running");
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        p->CreatePlan();
+        planner_algorithm->CreatePlan();
         loop_rate.sleep();
     }
     return 0;
