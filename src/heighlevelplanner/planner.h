@@ -22,7 +22,9 @@ private:
     ruteExplorer *searcher;
     Explorer *explorer;
     ros::Publisher pathPublisher;
+    ros::Publisher statesPublisher;
     void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
+    void PublicStates(const std::vector<int> *map, const std::vector<int> *states);
 
 public:
     planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *explorer);

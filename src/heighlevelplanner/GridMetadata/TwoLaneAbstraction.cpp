@@ -42,6 +42,14 @@ const std::vector<int>* TwoLaneAbstraction::getMap()
     return mapCopy;
 }
 
+const std::vector<int>* TwoLaneAbstraction::getMapStates()
+{
+    auto statesVector = new std::vector<int>;
+    for(auto cellMetadata = this->metadata->begin(); cellMetadata != this->metadata->end(); cellMetadata++)
+        statesVector->push_back(cellMetadata->cell_state);
+    return statesVector;
+}
+
 bool TwoLaneAbstraction::getIsMapSet()
 {
     return this->mapset;
@@ -101,12 +109,12 @@ int TwoLaneAbstraction::getControlSignal(int actual_state, int next_state)
 void TwoLaneAbstraction::Compute_Abstraction()
 {
     int visible_states = 3;
-    int state_offset = 2;
+    int state_offset = 3;
     int map_cells_regions = this->map->info.width / visible_states;
     int actual_state = 0;
     for(int i = 0; i != this->map->info.width * this->map->info.height; i++)
     {
-        int grid_cell_offset = i % (int)this->map->info.resolution;
+        int grid_cell_offset = (float)i % (this->map->info.resolution);
         int cell_offset_state = grid_cell_offset / visible_states;
         cellMetadata newMetadata;
         newMetadata.cell_state = cell_offset_state + state_offset ;

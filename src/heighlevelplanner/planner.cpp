@@ -7,6 +7,29 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *expl
     this->searcher = searcher;
     this->explorer = explorer;
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
+    this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
+}
+
+void planner::CreatePlan()
+{
+    if(this->world->getIsMapSet() && this->world->getStateIsSet())
+    {
+        this->world->Compute_Abstraction();
+        int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
+        //TODO: add state verification cycle
+        SelectGoal goalSelector(this->world);
+        int goal = goalSelector.getGoal();
+        auto path = this->searcher->getRute(start, goal);
+        auto plann = this->world->getStatesChain(path);
+
+        //Public control signal
+        //this->explorer->PublishNextCOntrol(plann);
+        //Public to Rviz
+        this->PublicPath(this->world->getMap(), path);
+        this->PublicStates(this->world->getMap(), this->world->getMapStates());
+        //Logg results for testing
+        this->test(path, plann);
+    }
 }
 
 void planner::ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array)
@@ -40,27 +63,29 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
     this->pathPublisher.publish(pathMap);
 }
 
-void planner::CreatePlan()
+void planner::PublicStates(const std::vector<int> *map, const std::vector<int> *states)
 {
-    if(this->world->getIsMapSet() && this->world->getStateIsSet())
+    nav_msgs::OccupancyGrid pathMap;
+    pathMap.data.resize(map->size());
+    fill(pathMap.data.begin(), pathMap.data.end(), 0);
+    for(int i = 0; i < states->size(); i++)
     {
-        this->world->Compute_Abstraction();
-        int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
-        //TODO: add state verification cycle
-        SelectGoal goalSelector(this->world);
-        int goal = goalSelector.getGoal();
-        auto path = this->searcher->getRute(start, goal);
-        auto plann = this->world->getStatesChain(path);
-
-        //Public control signal
-        this->explorer->PublishNextCOntrol(plann);
-
-        //Public to Rviz
-        this->PublicPath(this->world->getMap(), path);
-
-        //Logg results for testing
-        this->test(path, plann);
+        int state = states->at(i);
+        int cellValue = state * 100;
+        std::cout << "State value " << cellValue << std::endl;
+        pathMap.data[i] = cellValue;
     }
+    pathMap.info.origin.position.x = 0;
+    pathMap.info.origin.position.y = 0;
+    pathMap.info.origin.position.z = 0;
+    pathMap.info.origin.orientation.x = 0;
+    pathMap.info.origin.orientation.y = 0;
+    pathMap.info.origin.orientation.z = 0;
+    pathMap.info.origin.orientation.w = 0;
+    pathMap.info.resolution = this->world->getResolution();
+    pathMap.info.width = this->world->getWidth();
+    pathMap.info.height = this->world->getHeight();
+    this->statesPublisher.publish(pathMap);
 }
 
 void planner::test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann)

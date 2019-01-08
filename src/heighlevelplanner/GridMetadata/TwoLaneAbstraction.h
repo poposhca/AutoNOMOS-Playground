@@ -27,6 +27,7 @@ public:
     void setMap(const nav_msgs::OccupancyGrid&);
     void setState(const int laneStates);
     const std::vector<int>* getMap();
+    const std::vector<int>* getMapStates();
     bool getIsMapSet();
     bool getStateIsSet();
     int getWidth();
