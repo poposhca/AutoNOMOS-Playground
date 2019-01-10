@@ -28,6 +28,22 @@ void TwoLaneAbstraction::setState(const int laneStates)
     this->actual_state = laneStates;
 }
 
+void TwoLaneAbstraction::Compute_Abstraction()
+{
+    int visible_states = 3;
+    int state_offset = 3;
+    int width = this->map->info.width;
+    int map_cells_regions = width / visible_states;
+    for(int i = 0; i != width * this->map->info.height; i++)
+    {
+        int row_cell_number = i % width;
+        int cell_state = row_cell_number / map_cells_regions;
+        cellMetadata newMetadata;
+        newMetadata.cell_state = cell_state + state_offset ;
+        this->metadata->at(i) = newMetadata;
+    }
+}
+
 bool TwoLaneAbstraction::getStateIsSet()
 {
     return this->stateSet;
@@ -104,22 +120,6 @@ int TwoLaneAbstraction::getControlSignal(int actual_state, int next_state)
         return 1;
     if(actual_state < next_state) 
         return -1;
-}
-
-void TwoLaneAbstraction::Compute_Abstraction()
-{
-    int visible_states = 3;
-    int state_offset = 3;
-    int map_cells_regions = this->map->info.width / visible_states;
-    int actual_state = 0;
-    for(int i = 0; i != this->map->info.width * this->map->info.height; i++)
-    {
-        int grid_cell_offset = (float)i % (this->map->info.resolution);
-        int cell_offset_state = grid_cell_offset / visible_states;
-        cellMetadata newMetadata;
-        newMetadata.cell_state = cell_offset_state + state_offset ;
-        this->metadata->at(i) = newMetadata;
-    }
 }
 
 void TwoLaneAbstraction::test()

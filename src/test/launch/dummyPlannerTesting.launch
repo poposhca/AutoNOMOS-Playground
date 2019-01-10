@@ -3,7 +3,6 @@
     (the first cuadrant)
 -->
 <launch>
-
     <node name="test" pkg="testnode" type="testnode_map" output="log">
         <param name="testnode_test"     type="int"      value="0"/>
     </node> 
@@ -13,5 +12,4 @@
     </node>
     <node name="states_mock" pkg="state_mock" type="state_mock" output="screen" />
     <node name="planner" pkg="planner" type="planner" output="screen" />
-
 </launch>

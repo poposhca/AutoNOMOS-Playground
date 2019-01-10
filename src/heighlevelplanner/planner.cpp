@@ -49,7 +49,7 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
     pathMap.data.resize(map->size());
     fill(pathMap.data.begin(), pathMap.data.end(), 0);
     for(auto i = path->begin(); i != path->end(); i++)
-        pathMap.data[*i] = 200;
+        pathMap.data[*i] = 100;
     pathMap.info.origin.position.x = 0;
     pathMap.info.origin.position.y = 0;
     pathMap.info.origin.position.z = 0;
@@ -72,7 +72,6 @@ void planner::PublicStates(const std::vector<int> *map, const std::vector<int> *
     {
         int state = states->at(i);
         int cellValue = state * 100;
-        std::cout << "State value " << cellValue << std::endl;
         pathMap.data[i] = cellValue;
     }
     pathMap.info.origin.position.x = 0;
