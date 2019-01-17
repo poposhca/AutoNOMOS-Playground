@@ -8,6 +8,8 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *expl
     this->explorer = explorer;
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
+    auto ltlTest = new ltl_Automaton();
+    ltlTest->create_automaton("!F(red & X(yellow))");
 }
 
 void planner::CreatePlan()

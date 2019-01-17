@@ -11,6 +11,7 @@
 #include "selectGoal/selectGoal.h"
 #include "search/search.h"
 #include "explore/explorer.h"
+#include "ltlAtomaton/ltlAutomaton.h"
 
 #define NUM_STATES 7
 #define STATE_WIDTH 20

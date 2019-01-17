@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 2.8.3)
 project(planner)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
+# LTL packeges dependencies "SPOT"
+set( SPOT_LINK_LIB libspot.so )
+link_directories( /usr/lib/ )
+include_directories( /usr/include/spot/ )
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -150,6 +154,11 @@ add_library(EXPLORER
     explore/explorer.h
 )
 
+add_library(LTL
+    ltlAtomaton/ltlAutomaton.cpp
+    ltlAtomaton/ltlAutomaton.h
+)
+
 #Library for metadata atached to each grid cell
 
 ## Add cmake target dependencies of the library
@@ -180,6 +189,8 @@ target_link_libraries(${PROJECT_NAME}
    SEARCHER
    GOALSELECTER
    EXPLORER
+   LTL
+   ${SPOT_LINK_LIB}
 )
 
 #############
