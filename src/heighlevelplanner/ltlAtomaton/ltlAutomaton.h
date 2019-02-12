@@ -4,8 +4,11 @@
 #include <iostream>
 #include <string>
 #include <spot/tl/parse.hh>
+#include <spot/parseaut/public.hh>
 #include <spot/twaalgos/translate.hh>
 #include <spot/twaalgos/hoa.hh>
+#include <spot/twa/bddprint.hh>
+#include "muParser.h"
 
 class ltl_Automaton {
 

@@ -5,8 +5,11 @@ project(planner)
 add_compile_options(-std=c++14)
 # LTL packeges dependencies "SPOT"
 set( SPOT_LINK_LIB libspot.so )
+set( MUPARSER_LINK_LIB libmuparser.so )
 link_directories( /usr/lib/ )
+link_directories( /usr/local/lib/ )
 include_directories( /usr/include/spot/ )
+include_directories( /usr/local/include )
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -191,6 +194,7 @@ target_link_libraries(${PROJECT_NAME}
    EXPLORER
    LTL
    ${SPOT_LINK_LIB}
+   ${MUPARSER_LINK_LIB}
 )
 
 #############
