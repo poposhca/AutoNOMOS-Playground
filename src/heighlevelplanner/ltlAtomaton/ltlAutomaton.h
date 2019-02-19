@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
 #include <spot/tl/parse.hh>
 #include <spot/parseaut/public.hh>
 #include <spot/twaalgos/translate.hh>
@@ -12,9 +14,13 @@
 
 class ltl_Automaton {
 
+private:
+    std::vector<std::map<int, std::string>*> *state_machine;
+
 public:
     ltl_Automaton();
     void create_automaton(std::string ltl_formula);
+    bool evaluate_formula(std::vector<std::tuple<int, std::string>> *chain);
 
 };
 
