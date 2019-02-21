@@ -20,6 +20,7 @@ class planner
 {
 private:
     WorldAbstraction *world;
+    ltl_Automaton *automaton;
     ruteExplorer *searcher;
     Explorer *explorer;
     ros::Publisher pathPublisher;

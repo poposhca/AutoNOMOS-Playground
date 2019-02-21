@@ -1,10 +1,10 @@
 #ifndef __LTLAUTOMATON_H__
 #define __LTLAUTOMATON_H__
 
+#include <map>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <map>
 #include <spot/tl/parse.hh>
 #include <spot/parseaut/public.hh>
 #include <spot/twaalgos/translate.hh>
@@ -15,12 +15,13 @@
 class ltl_Automaton {
 
 private:
-    std::vector<std::map<int, std::string>*> *state_machine;
+    int actualState;
+    std::vector<std::vector<std::tuple<int, std::string>>*> *state_machine;
 
 public:
     ltl_Automaton();
     void create_automaton(std::string ltl_formula);
-    bool evaluate_formula(std::vector<std::tuple<int, std::string>> *chain);
+    bool evaluate_formula(std::vector<std::tuple<std::string, int>> *chain);
 
 };
 
