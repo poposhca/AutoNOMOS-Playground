@@ -9,7 +9,7 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *expl
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
-    this->automaton->create_automaton("!F(rc & X(rr))");
+    this->automaton->create_automaton("!F(RC & X(RR))");
 }
 
 void planner::CreatePlan()
