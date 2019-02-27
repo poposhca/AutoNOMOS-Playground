@@ -9,7 +9,8 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *expl
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
-    this->automaton->create_automaton("!F(RC & X(RR))");
+    //this->automaton->create_automaton("!F(RC & X(RR))");
+    this->automaton->create_automaton("RC");
 }
 
 void planner::CreatePlan()
@@ -18,12 +19,18 @@ void planner::CreatePlan()
     {
         this->world->Compute_Abstraction();
         int start = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
-        //TODO: add state verification cycle
-        SelectGoal goalSelector(this->world);
-        int goal = goalSelector.getGoal();
-        auto path = this->searcher->getRute(start, goal);
-        auto plann = this->world->getStatesChain(path);
-        this->automaton->evaluate_formula(plann);
+        int goal;
+        std::vector<int> *path;
+        std::vector<std::tuple<std::string, int>> *plann;
+        bool ltl_validation;
+        do
+        {
+            SelectGoal goalSelector(this->world);
+            goal = goalSelector.getGoal();
+            path = this->searcher->getRute(start, goal);
+            plann = this->world->getStatesChain(path);
+            ltl_validation = this->automaton->evaluate_formula(plann);
+        } while (!ltl_validation);
         
         //Public control signal
         //this->explorer->PublishNextCOntrol(plann);

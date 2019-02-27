@@ -52,27 +52,15 @@ void ltl_Automaton::create_automaton(std::string ltl_formula)
             this->replaceNotOperators(cond);
             auto edge_tuple = std::make_tuple(dest_state, cond);
             graph_edges->push_back(edge_tuple);
-
-            std::cout << "  edge(" << t.src << " -> " << t.dst << ")\n    label = ";
-            std::cout << cond << '\n';
+            // std::cout << "  edge(" << t.src << " -> " << t.dst << ")\n    label = ";
+            // std::cout << cond << '\n';
         }
         this->state_machine->push_back(graph_edges);
     }
     this->actualState = aut->get_init_state_number();
 
-    // Just for tests
-    // double a = 1;
-    // double b = 0;
-    // mu::Parser *parser = new mu::Parser();
-    // parser->DefineVar("RC", &a);
-    // parser->DefineVar("b", &b);
-    // parser->SetExpr("RC");
-    // std::cout << "Result: " << parser->Eval() << std::endl;
-    // char control;
-    // std::cin >> control;
-
-    std::cout << "Init state " << aut->get_init_state_number() << std::endl;
-    std::cout << "Acceptance states " << aut->get_acceptance() << std::endl;
+    // std::cout << "Init state " << aut->get_init_state_number() << std::endl;
+    // std::cout << "Acceptance states " << aut->get_acceptance() << std::endl;
 }
 
 bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *chain)
@@ -99,11 +87,15 @@ bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *
         {
             std::string expression = std::get<1>(*edge);
             this->parser->SetExpr(expression);
-            std::cout << "Expression: " << expression << " AP: " << atomic_proposition << std::endl;
             double result = this->parser->Eval();
+            // std::cout << "Eval: " << result << std::endl;
+            // std::cout << "Expression: " << expression << " AP: " << atomic_proposition << std::endl;
+            if (result && (edge+1) == actual_state_list->end())
+                return true;
             if (result)
                 this->actualState = std::get<0>(*edge);
-            std::cout << "Eval: " << result << std::endl;
+            else
+                return false;
         }
     }
     return true;
