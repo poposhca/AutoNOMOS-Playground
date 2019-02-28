@@ -59,7 +59,7 @@ void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *pa
     pathMap.data.resize(map->size());
     fill(pathMap.data.begin(), pathMap.data.end(), 0);
     for(auto i = path->begin(); i != path->end(); i++)
-        pathMap.data[*i] = 100;
+        pathMap.data[*i] = 200;
     pathMap.info.origin.position.x = 0;
     pathMap.info.origin.position.y = 0;
     pathMap.info.origin.position.z = 0;

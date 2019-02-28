@@ -7,6 +7,11 @@
 <launch>
 
     <node name="test" pkg="testnode" type="testnode_map" output="screen">
+        <!--
+        Param testnode_test options:
+        0: Laser detects object in front of the car
+        4: No object detected
+        -->
         <param name="testnode_test"     type="int"      value="0"/>
     </node> 
     <node name="map" pkg="map" type="map" output="screen">

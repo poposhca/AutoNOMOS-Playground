@@ -4,7 +4,12 @@
 -->
 <launch>
     <node name="test" pkg="testnode" type="testnode_map" output="log">
-        <param name="testnode_test"     type="int"      value="1"/>
+        <!--
+        Param testnode_test options:
+        1: Laser detects object in front of the car
+        4: No object detected
+        -->
+        <param name="testnode_test"     type="int"      value="4"/>
     </node> 
     <node name="map" pkg="map" type="map" output="log">
         <param name="map/cell_resolution"     type="double"      value="1" />
