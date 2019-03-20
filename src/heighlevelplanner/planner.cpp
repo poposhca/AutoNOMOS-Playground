@@ -1,11 +1,11 @@
 #include "planner.h"
 
-planner::planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *explorer)
+planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
 {
     ros::NodeHandle nh;
     this->world = world;
     this->searcher = searcher;
-    this->explorer = explorer;
+    //this->explorer = explorer;
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();

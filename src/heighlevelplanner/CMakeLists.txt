@@ -146,16 +146,12 @@ add_library(GOALSELECTER
     selectGoal/selectGoal.h
 )
 
-add_library(EXPLORER
-    explore/Controller/pose_controller.cpp
-    explore/Controller/pose_controller.h
-    explore/Model/ackerman.cpp
-    explore/Model/ackerman.h
-    explore/search_tree.cpp
-    explore/search_tree.h
-    explore/explorer.cpp
-    explore/explorer.h
-)
+#add_library(EXPLORER
+#    explore/search_tree.cpp
+#    explore/search_tree.h
+#    explore/explorer.cpp
+#    explore/explorer.h
+#)
 
 add_library(LTL
     ltlAtomaton/ltlAutomaton.cpp
@@ -191,7 +187,7 @@ target_link_libraries(${PROJECT_NAME}
    GRIDMETADATA
    SEARCHER
    GOALSELECTER
-   EXPLORER
+   #EXPLORER
    LTL
    ${SPOT_LINK_LIB}
    ${MUPARSER_LINK_LIB}

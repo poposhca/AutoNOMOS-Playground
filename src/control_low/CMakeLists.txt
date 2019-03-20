@@ -131,7 +131,7 @@ link_directories()
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/control_low_node.cpp)
-add_executable(control_low PIDcontroller_lane_sim.cpp)
+add_executable(control_low node_startup.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

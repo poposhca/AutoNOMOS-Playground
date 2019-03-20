@@ -24,8 +24,8 @@ int main(int argc, char **argv)
     //Set planner components
     auto world = new TwoLaneAbstraction();
     auto searcher = new astar(world);
-    auto explorer = new Explorer(-100, speedTopic, steerTopic, nh);
-    auto *planner_algorithm = new planner(world, searcher, explorer);
+    // auto explorer = new Explorer(-100, speedTopic, steerTopic, nh);
+    auto *planner_algorithm = new planner(world, searcher);
     //TODO Subscribe to LTL node
 
     //Subscribe to topics

@@ -10,7 +10,7 @@
 #include "GridMetadata/WorldAbstraction.h"
 #include "selectGoal/selectGoal.h"
 #include "search/search.h"
-#include "explore/explorer.h"
+// #include "explore/explorer.h"
 #include "ltlAtomaton/ltlAutomaton.h"
 
 #define NUM_STATES 7
@@ -22,14 +22,14 @@ private:
     WorldAbstraction *world;
     ltl_Automaton *automaton;
     ruteExplorer *searcher;
-    Explorer *explorer;
+    // Explorer *explorer;
     ros::Publisher pathPublisher;
     ros::Publisher statesPublisher;
     void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
     void PublicStates(const std::vector<int> *map, const std::vector<int> *states);
 
 public:
-    planner(WorldAbstraction *world, ruteExplorer *searcher, Explorer *explorer);
+    planner(WorldAbstraction *world, ruteExplorer *searcher);
     void ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
     void CreatePlan();
