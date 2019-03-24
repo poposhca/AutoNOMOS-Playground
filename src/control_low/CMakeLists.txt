@@ -7,7 +7,7 @@ project(control_low)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED roscpp std_msgs )
+find_package(catkin REQUIRED roscpp std_msgs geometry_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -118,9 +118,10 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 link_directories()
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/control_low.cpp
-# )
+add_library(CONTROL
+   controller/point_controller.cpp
+   controller/point_controller.h
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -147,7 +148,10 @@ add_executable(control_low node_startup.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(control_low ${catkin_LIBRARIES} )
+target_link_libraries(control_low 
+    ${catkin_LIBRARIES}
+    CONTROL
+)
 
 
 #############

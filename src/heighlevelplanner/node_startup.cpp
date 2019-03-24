@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     std::string speedTopic;
     std::string steerTopic;
     priv_nh.param<std::string>("planner/car_speed", speedTopic, "/AutoNOMOS_mini/manual_control/speed");
-    priv_nh.param<std::string>("planner/car_speed", steerTopic, "/AutoNOMOS_mini/manual_control/steering");
+    priv_nh.param<std::string>("planner/car_steering", steerTopic, "/AutoNOMOS_mini/manual_control/steering");
 
     //Set planner components
     auto world = new TwoLaneAbstraction();
