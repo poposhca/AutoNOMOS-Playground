@@ -32,6 +32,6 @@ float Point_Controller::get_angle()
     if(delta_x == 0)
         return 0;
     float delta_y = this->goal_y - this->actual_y;
-    float theta = atanf(delta_y / delta_x);
+    float theta = angles::to_degrees(atanf(delta_y / delta_x));
     return this->Kh * (theta - this->actual_theta);
 }
