@@ -132,6 +132,7 @@ ${catkin_INCLUDE_DIRS}
 add_executable(${PROJECT_NAME}_map mapTest.cpp)
 add_executable(${PROJECT_NAME}_carPose remoteControlPoseTest.cpp)
 add_executable(${PROJECT_NAME}_car remotControl.cpp)
+add_executable(${PROJECT_NAME}_control low_controller.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -151,6 +152,9 @@ target_link_libraries(${PROJECT_NAME}_carPose
     ${catkin_LIBRARIES}
 )
 target_link_libraries(${PROJECT_NAME}_car
+    ${catkin_LIBRARIES}
+)
+target_link_libraries(${PROJECT_NAME}_control
     ${catkin_LIBRARIES}
 )
 
