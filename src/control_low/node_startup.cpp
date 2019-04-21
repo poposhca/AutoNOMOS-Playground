@@ -16,8 +16,8 @@ void execute_controller_model();
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
     double actual_angle_rad = msg.theta;
-    // Transfor angle to degrees and rest the 90 deg offset from the car
-    double actual_gle_degrees = angles::to_degrees(actual_angle_rad) - 90;
+    // Transfor angle to degrees, the initial angle is 90
+    double actual_gle_degrees = angles::to_degrees(actual_angle_rad);
     controller->set_actual_point(msg.x, msg.y, actual_gle_degrees);
 
     //DEBUG PRINT
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     ros::Subscriber goal_velocity = nh.subscribe("/control/speed", 1000, &set_car_speed_manual);
     ros::Publisher autonomos_v = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/speed", 1000);
     ros::Publisher autonomos_s = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/steering", 1000);
-    controller = new Point_Controller(300, 6);
+    controller = new Point_Controller(300, 3);
     is_goal_set = false;
     while(ros::ok)
     {
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
             autonomos_v.publish(velocity_msg);
 
             // Get and publish steering
-            float angle = controller->get_angle() + 90;
+            float angle = controller->get_angle();
             std::cout << "  theta: " << angle << std::endl;
             std_msgs::Int16 steering_msg;
             steering_msg.data = static_cast<int>(angle);
