@@ -31,6 +31,11 @@ void set_next_goal(const geometry_msgs::Pose2D &msg)
 {
     is_goal_set = true;
     controller->set_goal_point(msg.x, msg.y);
+
+    //DEBUG PRINT
+    // ROS_INFO_STREAM("Goal Pose");
+    // std::cout << "  Goal X: " << msg.x << std::endl;
+    // std::cout << "  Goal Y: " << msg.y << std::endl;
 }
 
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
@@ -49,7 +54,7 @@ int main(int argc, char** argv)
     ros::Subscriber goal_velocity = nh.subscribe("/control/speed", 1000, &set_car_speed_manual);
     ros::Publisher autonomos_v = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/speed", 1000);
     ros::Publisher autonomos_s = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/steering", 1000);
-    controller = new Point_Controller(300, 3);
+    controller = new Point_Controller(300, 1);
     is_goal_set = false;
     while(ros::ok)
     {

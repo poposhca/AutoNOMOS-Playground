@@ -1,4 +1,4 @@
 <launch>
-    <node name="low_level" pkg="control_low" type="control_low" output="log" />
-    <node name="Test" pkg="testnode" type="testnode_control" output="screen" />
+    <node name="low_level" pkg="control_low" type="control_low" output="screen" />
+    <node name="Test" pkg="testnode" type="testnode_control" output="log" />
 </launch>

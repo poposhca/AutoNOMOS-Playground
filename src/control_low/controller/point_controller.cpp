@@ -1,4 +1,5 @@
 #include "./point_controller.h"
+#include <iostream>
 
 Point_Controller::Point_Controller(float Kv, float Kh)
 {
@@ -33,7 +34,13 @@ float Point_Controller::get_angle()
         return 0;
     float delta_y = this->goal_y - this->actual_y;
     float theta = angles::to_degrees(atanf(delta_y / delta_x));
-    if(theta <= 90)
-        return this->Kh * (this->actual_theta - theta);
-    return this->Kh * (this->actual_theta + 90 - theta);
+    float steer;
+    if(theta < 0)
+        steer = this->Kh * (90 + theta);
+    steer = this->Kh * (90 - theta);
+    std::cout << "Delta X: " << delta_x << std::endl;
+    std::cout << "Delta Y: " << delta_y << std::endl;
+    std::cout << "Theta: " << theta << std::endl;
+    std::cout << "Steering: " << steer << std::endl;
+    return steer;
 }

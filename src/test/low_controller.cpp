@@ -7,6 +7,8 @@
 #include <std_msgs/Int16.h>
 #include <geometry_msgs/Pose2D.h>
 
+#define RADIUS_LIMIT 0.1
+
 using namespace std;
 
 // Next Goal variables
@@ -27,9 +29,9 @@ int main(int argc, char** argv)
 
     //Make fake plann
     plann.push_back(make_tuple(0.75, 1.0));
-    plann.push_back(make_tuple(0.31, 2.0));
+    plann.push_back(make_tuple(0.50, 2.0));
     plann.push_back(make_tuple(0.75, 3.0));
-    plann.push_back(make_tuple(0.31, 4.0));
+    // plann.push_back(make_tuple(0.31, 4.0));
     actual_step = 0;
     is_near_point = false;
 
@@ -40,6 +42,7 @@ int main(int argc, char** argv)
         geometry_msgs::Pose2D pose_msg;
         pose_msg.x = get<0>(plann.at(actual_step));
         pose_msg.y = get<1>(plann.at(actual_step));
+         cout << "GOAL X: " << pose_msg.x << " GOAL Y: " << pose_msg.y << endl;
         control_publisher.publish(pose_msg);
 
         std_msgs::Int16 speed_msg;
@@ -57,13 +60,14 @@ void autonomos_pose_listener(const geometry_msgs::Pose2D &msg)
     double actual_x = msg.x;
     double actual_y = msg.y;
     double goalX = get<0>(plann.at(actual_step));
-    double goalY = get<0>(plann.at(actual_step));
+    double goalY = get<1>(plann.at(actual_step));
     double radious = sqrt(pow(goalX - actual_x, 2) + pow(goalY - actual_y, 2));
-    cout << "X: " << actual_x << " Y: " << actual_y << radious << endl;
-    cout << "Radio " << radious << endl;
+    // cout << "GOAL X: " << goalX << " GOAL Y: " << goalY << endl;
+    // cout << "X: " << actual_x << " Y: " << actual_y << endl;
+    // cout << "Radio " << radious << endl;
     bool car_at_end = actual_step == plann.size() - 1;
-    if(radious <= 0.3 && car_at_end)
+    if(radious <= RADIUS_LIMIT && car_at_end)
         is_near_point = true;
-    else if(radious <= 0.3)
+    else if(radious <= RADIUS_LIMIT)
         actual_step++;
 }
