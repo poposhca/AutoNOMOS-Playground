@@ -1,16 +1,12 @@
-// #include "explorer.h"
+#include "explorer.h"
 
-// Explorer::Explorer(float car_throttle, std::string speedTopic, std::string angleTopic,ros::NodeHandle nh)
-// {
-//     //this->time = map_resolution / car_throttle;
-//     this->car_throttle = car_throttle;
-//     this->model = new AckermanModel(1);
-//     this->controller = new Pose_Controller();
-//     this->statesTree = new searchTree();
-//     this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
-//     this->throttlePublisher = nh.advertise<std_msgs::Int16>(speedTopic, 1000);
-//     this->steeringPublisher = nh.advertise<std_msgs::Int16>(angleTopic, 1000);
-// }
+Explorer::Explorer(float car_throttle, std::string speedTopic, std::string angleTopic, ros::NodeHandle nh)
+{
+    this->car_throttle = car_throttle;
+    this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
+    //this->throttlePublisher = nh.advertise<std_msgs::Int16>(speedTopic, 1000);
+    //this->steeringPublisher = nh.advertise<std_msgs::Int16>(angleTopic, 1000);
+}
 
 // void Explorer::StartMoving()
 // {
@@ -19,18 +15,14 @@
 //     this->throttlePublisher.publish(throttleMessage);
 // }
 
-// void Explorer::PublishNextCOntrol(const std::vector<std::tuple<std::string, int>> *plann)
-// {
-//     int controlSignal = std::get<1>(plann->at(1));
-//     std_msgs::Int16 controlMessage;
-//     if(controlSignal == 0)
-//         controlMessage.data = 90;
-//     else
-//         controlMessage.data = controlSignal == -1 ? -30 + 90 : 30 + 90;
-//     this->steeringPublisher.publish(controlMessage);
-//     // controlMessage.data = controlSignal;
-//     // this->constrolSignalPublisher.publish(controlMessage);
-// }
+void Explorer::PushPlann(const std::vector<std::tuple<std::string, int>> *plann)
+{
+    if(plann != NULL)
+    {
+        for(auto state = plann->begin; state != plann->end(); state++)
+            this->plann.push_back(*state);
+    }
+}
 
 // void Explorer::SetGoal(float x, float y, float theta)
 // {

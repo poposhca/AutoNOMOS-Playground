@@ -5,4 +5,5 @@
     </node>
     <node name="states_mock" pkg="state_mock" type="state_mock" output="screen" />
     <node name="planner" pkg="planner" type="planner" output="screen" />
+    <node name="low_level" pkg="control_low" type="control_low" output="screen" />
 </launch>

@@ -5,7 +5,7 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     ros::NodeHandle nh;
     this->world = world;
     this->searcher = searcher;
-    //this->explorer = explorer;
+    this->plannPublisher = nh.advertise<std_msgs::Int32MultiArray>("/control/plann", 1000);
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
@@ -30,10 +30,9 @@ void planner::CreatePlan()
             path = this->searcher->getRute(start, goal);
             plann = this->world->getStatesChain(path);
             ltl_validation = this->automaton->evaluate_formula(plann);
-        } while (!ltl_validation);
-        
-        //Public control signal
-        //this->explorer->PublishNextCOntrol(plann);
+        } while (!ltl_validation);   
+        //Push current plan to explorer
+        this->PublicPlann(plann);
         //Public to Rviz
         this->PublicPath(this->world->getMap(), path);
         this->PublicStates(this->world->getMap(), this->world->getMapStates());
@@ -51,6 +50,21 @@ void planner::ReadLaneState(const std_msgs::Float32MultiArray &loacalization_arr
 void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 {
     this->world->setMap(map);
+}
+
+void planner::PublicPlann(const std::vector<std::tuple<std::string, int>> *plann)
+{
+    if(plann == NULL)
+        return;
+    std_msgs::Int32MultiArray plann_msg;
+    std::vector<int> plann_data;
+    for(auto signal = plann->begin(); signal != plann->end(); signal++)
+    {
+        int control_signal = std::get<1>(*signal);
+        plann_data.push_back(control_signal);
+    }
+    plann_msg.data = plann_data;
+    this->plannPublisher.publish(plann_msg);
 }
 
 void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
@@ -116,6 +130,6 @@ void planner::test(const std::vector<int> *path, const std::vector<std::tuple<st
     std::cout << "" << std::endl;
 
     std::cout << "================================" << std::endl;
-    // char control;
-    // std::cin >> control;
+    char control;
+    std::cin >> control;
 }

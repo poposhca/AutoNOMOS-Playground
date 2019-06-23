@@ -4,13 +4,14 @@
 #include <tuple>
 #include <algorithm>
 #include <ros/ros.h>
+#include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/Float32MultiArray.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
 #include "GridMetadata/WorldAbstraction.h"
 #include "selectGoal/selectGoal.h"
 #include "search/search.h"
-// #include "explore/explorer.h"
+#include "explore/explorer.h"
 #include "ltlAtomaton/ltlAutomaton.h"
 
 #define NUM_STATES 7
@@ -22,9 +23,11 @@ private:
     WorldAbstraction *world;
     ltl_Automaton *automaton;
     ruteExplorer *searcher;
-    // Explorer *explorer;
+    Explorer *explorer;
+    ros::Publisher plannPublisher;
     ros::Publisher pathPublisher;
     ros::Publisher statesPublisher;
+    void PublicPlann(const std::vector<std::tuple<std::string, int>> *plann);
     void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
     void PublicStates(const std::vector<int> *map, const std::vector<int> *states);
 

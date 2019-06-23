@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <string>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Int32MultiArray.h>
 #include <geometry_msgs/Pose2D.h>
 #include <angles/angles.h>
 #include "./controller/point_controller.h"
@@ -10,8 +11,11 @@ Point_Controller *controller;
 
 int car_velocity;
 bool is_goal_set;
-void execute_controller_car();
-void execute_controller_model();
+bool is_pose_set;
+std::vector<int> plann;
+// Refactor please
+float car_x;
+float car_y;
 
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
@@ -19,23 +23,40 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
     // Transfor angle to degrees, the initial angle is 90
     double actual_gle_degrees = angles::to_degrees(actual_angle_rad);
     controller->set_actual_point(msg.x, msg.y, actual_gle_degrees);
-
-    //DEBUG PRINT
-    // ROS_INFO_STREAM("Actual Pose");
-    // std::cout << "  X: " << msg.x << std::endl;
-    // std::cout << "  Y: " << msg.y << std::endl;
-    // std::cout << "  Theta: " << msg.theta << std::endl;
+    car_x = msg.x;
+    car_y = msg.y;
+    is_pose_set = true;
 }
 
 void set_next_goal(const geometry_msgs::Pose2D &msg)
 {
     is_goal_set = true;
     controller->set_goal_point(msg.x, msg.y);
+}
 
-    //DEBUG PRINT
-    // ROS_INFO_STREAM("Goal Pose");
-    // std::cout << "  Goal X: " << msg.x << std::endl;
-    // std::cout << "  Goal Y: " << msg.y << std::endl;
+void push_plann(const std_msgs::Int32MultiArray &plann_msg)
+{
+    std::vector<int> plann = plann_msg.data;
+    for(auto state = plann.begin(); state != plann.end(); state++)
+        plann.push_back(*state);
+}
+
+void set_next_point()
+{
+    if(plann.size() == 0)
+     return;
+    auto const next_step = plann.at(0);
+    float next_y = car_y + 0.25;
+    float next_x;
+    if(next_step == 0)
+        next_x = car_x;
+    if(next_step == 1)
+        next_x = car_x + 0.25;
+    if(next_step == -1)
+        next_x = car_x - 0.25;
+    std::cout << next_x << std::endl;
+    std::cout << next_y << std::endl;
+    controller->set_goal_point(next_x, next_y);
 }
 
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
@@ -51,6 +72,7 @@ int main(int argc, char** argv)
     // Sub /AutoNOMOS_simulation/real_pose -> geometry_msgs/Pose2D
     ros::Subscriber autonomos_pose = nh.subscribe("/AutoNOMOS_simulation/real_pose", 1000, &autonomos_pose_listener);
     ros::Subscriber goal_pose = nh.subscribe("/control/goal", 1000, &set_next_goal);
+    ros::Subscriber plann_subscriber = nh.subscribe("/control/plann", 1000, &push_plann);
     ros::Subscriber goal_velocity = nh.subscribe("/control/speed", 1000, &set_car_speed_manual);
     ros::Publisher autonomos_v = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/speed", 1000);
     ros::Publisher autonomos_s = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/steering", 1000);
@@ -59,8 +81,9 @@ int main(int argc, char** argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        if(is_goal_set)
+        if(is_pose_set)
         {
+            set_next_point();
             ROS_INFO_STREAM("Control signals");
             // Get and publish velocity
             // float velocity = controller->get_velocity() * -1;

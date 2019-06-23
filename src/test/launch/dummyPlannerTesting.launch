@@ -6,10 +6,11 @@
     <node name="test" pkg="testnode" type="testnode_map" output="log">
         <!--
         Param testnode_test options:
+        0: Laser detects object in the first cuadrant
         1: Laser detects object in front of the car
         4: No object detected
         -->
-        <param name="testnode_test"     type="int"      value="4"/>
+        <param name="testnode_test"     type="int"      value="0"/>
     </node> 
     <node name="map" pkg="map" type="map" output="log">
         <param name="map/cell_resolution"     type="double"      value="1" />
@@ -17,4 +18,5 @@
     </node>
     <node name="states_mock" pkg="state_mock" type="state_mock" output="screen" />
     <node name="planner" pkg="planner" type="planner" output="screen" />
+    <node name="low_level" pkg="control_low" type="control_low" output="screen" />
 </launch>

@@ -12,7 +12,6 @@
 using namespace std;
 
 // Next Goal variables
-// Carril izquierdo: 0.31, derecho: 0.75
 vector<tuple<double, double>> plann;
 int actual_step;
 bool is_near_point;
@@ -42,7 +41,7 @@ int main(int argc, char** argv)
         geometry_msgs::Pose2D pose_msg;
         pose_msg.x = get<0>(plann.at(actual_step));
         pose_msg.y = get<1>(plann.at(actual_step));
-         cout << "GOAL X: " << pose_msg.x << " GOAL Y: " << pose_msg.y << endl;
+        cout << "GOAL X: " << pose_msg.x << " GOAL Y: " << pose_msg.y << endl;
         control_publisher.publish(pose_msg);
 
         std_msgs::Int16 speed_msg;

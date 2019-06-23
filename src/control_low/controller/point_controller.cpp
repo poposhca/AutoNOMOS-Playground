@@ -38,9 +38,5 @@ float Point_Controller::get_angle()
     if(theta < 0)
         steer = this->Kh * (90 + theta);
     steer = this->Kh * (90 - theta);
-    std::cout << "Delta X: " << delta_x << std::endl;
-    std::cout << "Delta Y: " << delta_y << std::endl;
-    std::cout << "Theta: " << theta << std::endl;
-    std::cout << "Steering: " << steer << std::endl;
     return steer;
 }
