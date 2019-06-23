@@ -5,6 +5,7 @@ Point_Controller::Point_Controller(float Kv, float Kh)
 {
     this->Kv = Kv;
     this->Kh = Kh;
+    this->is_goal_setted = false;
 }
 
 void Point_Controller::set_actual_point(float actual_x, float actual_y, float actual_theta)
@@ -18,6 +19,7 @@ void Point_Controller::set_goal_point(float goal_x, float goal_y)
 {
     this->goal_x = goal_x;
     this->goal_y = goal_y;
+    this->is_goal_setted = true;
 }
 
 float Point_Controller::get_velocity()
@@ -39,4 +41,19 @@ float Point_Controller::get_angle()
         steer = this->Kh * (90 + theta);
     steer = this->Kh * (90 - theta);
     return steer;
+}
+
+float Point_Controller::get_goal_x()
+{
+    return this->goal_x;
+}
+
+float Point_Controller::get_goal_y()
+{
+    return this->goal_y;
+}
+
+bool Point_Controller::get_is_goal_setted()
+{
+    return this->is_goal_setted;
 }

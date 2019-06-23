@@ -15,6 +15,8 @@ private:
     // Control cosntants
     float Kv;
     float Kh;
+    // A goal is setted
+    bool is_goal_setted;
 public:
     Point_Controller(float Kv, float Kh);
     // Setters
@@ -23,4 +25,7 @@ public:
     // Getters
     float get_velocity();
     float get_angle();
+    float get_goal_x();
+    float get_goal_y();
+    bool get_is_goal_setted();
 };

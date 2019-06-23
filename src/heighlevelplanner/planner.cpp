@@ -57,13 +57,15 @@ void planner::PublicPlann(const std::vector<std::tuple<std::string, int>> *plann
     if(plann == NULL)
         return;
     std_msgs::Int32MultiArray plann_msg;
-    std::vector<int> plann_data;
-    for(auto signal = plann->begin(); signal != plann->end(); signal++)
+    plann_msg.data.resize(plann->size());
+    for(int i = 0; i < plann->size(); i++)
     {
-        int control_signal = std::get<1>(*signal);
-        plann_data.push_back(control_signal);
+        auto signal = plann->at(i);
+        int control_signal = std::get<1>(signal);
+        plann_msg.data[i]= control_signal;
     }
-    plann_msg.data = plann_data;
+    for(int i = 0; i < plann->size(); i++)
+        std::cout << plann_msg.data[i] << std::endl;
     this->plannPublisher.publish(plann_msg);
 }
 
@@ -130,6 +132,6 @@ void planner::test(const std::vector<int> *path, const std::vector<std::tuple<st
     std::cout << "" << std::endl;
 
     std::cout << "================================" << std::endl;
-    char control;
-    std::cin >> control;
+    // char control;
+    // std::cin >> control;
 }

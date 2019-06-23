@@ -7,18 +7,34 @@
 #include <angles/angles.h>
 #include "./controller/point_controller.h"
 
-Point_Controller *controller;
+#define RADIUS_LIMIT 0.1
 
-int car_velocity;
-bool is_goal_set;
-bool is_pose_set;
+Point_Controller *controller;
+int car_velocity = -50;
+bool is_goal_set = false;
+bool is_pose_set = false;
+bool is_plann_set = false;
+bool is_near_point = false;
 std::vector<int> plann;
 // Refactor please
 float car_x;
 float car_y;
 
+void check_is_near_point()
+{
+    ROS_INFO_STREAM("Ckecking point");
+    float goalX = controller->get_goal_x();
+    float goalY = controller->get_goal_y();
+    double radious = sqrt(pow(goalX - car_x, 2) + pow(goalY - car_y, 2));
+    if(radious <= RADIUS_LIMIT)
+        is_near_point = true;
+    else
+        is_near_point = false;
+}
+
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
+    ROS_INFO_STREAM("Pose recieved");
     double actual_angle_rad = msg.theta;
     // Transfor angle to degrees, the initial angle is 90
     double actual_gle_degrees = angles::to_degrees(actual_angle_rad);
@@ -36,27 +52,47 @@ void set_next_goal(const geometry_msgs::Pose2D &msg)
 
 void push_plann(const std_msgs::Int32MultiArray &plann_msg)
 {
-    std::vector<int> plann = plann_msg.data;
-    for(auto state = plann.begin(); state != plann.end(); state++)
-        plann.push_back(*state);
+    ROS_INFO_STREAM("Plann recieved");
+    for(int i = 0; i < plann_msg.data.size(); i++)
+    {
+        plann.push_back( plann_msg.data[i]);
+    }
+    is_plann_set = true;
 }
 
 void set_next_point()
 {
-    if(plann.size() == 0)
-     return;
-    auto const next_step = plann.at(0);
-    float next_y = car_y + 0.25;
-    float next_x;
-    if(next_step == 0)
-        next_x = car_x;
-    if(next_step == 1)
-        next_x = car_x + 0.25;
-    if(next_step == -1)
-        next_x = car_x - 0.25;
-    std::cout << next_x << std::endl;
-    std::cout << next_y << std::endl;
-    controller->set_goal_point(next_x, next_y);
+    check_is_near_point();
+    bool has_next_step = plann.size() > 0;
+    
+    if(is_near_point && !has_next_step){
+        car_velocity = 0;
+        std::cout << "No Point" << std::endl;
+        return;
+    }
+
+    if(!has_next_step) {
+        car_velocity = 0;
+        std::cout << "No Point" << std::endl;
+        return;
+    }
+
+    if(is_near_point || !controller->get_is_goal_setted())
+    {
+        auto const next_step = plann.at(0);
+        float next_y = car_y + 0.25;
+        float next_x;
+        if(next_step == 0)
+            next_x = car_x;
+        if(next_step == 1)
+            next_x = car_x + 0.25;
+        if(next_step == -1)
+            next_x = car_x - 0.25;
+        std::cout << next_x << std::endl;
+        std::cout << next_y << std::endl;
+        controller->set_goal_point(next_x, next_y);
+        plann.erase(plann.begin());
+    }
 }
 
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
@@ -81,7 +117,7 @@ int main(int argc, char** argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        if(is_pose_set)
+        if(is_pose_set && is_plann_set)
         {
             set_next_point();
             ROS_INFO_STREAM("Control signals");
