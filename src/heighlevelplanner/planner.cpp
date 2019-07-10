@@ -10,7 +10,7 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
     //this->automaton->create_automaton("!F(RC & X(RR))");
-    this->automaton->create_automaton("RC");
+    this->automaton->create_automaton("G(RC->F(CC))");
 }
 
 void planner::CreatePlan()
@@ -30,14 +30,14 @@ void planner::CreatePlan()
             path = this->searcher->getRute(start, goal);
             plann = this->world->getStatesChain(path);
             ltl_validation = this->automaton->evaluate_formula(plann);
+            //Logg results for testing
+            this->test(path, plann, ltl_validation);
         } while (!ltl_validation);   
         //Push current plan to explorer
         this->PublicPlann(plann);
         //Public to Rviz
         this->PublicPath(this->world->getMap(), path);
         this->PublicStates(this->world->getMap(), this->world->getMapStates());
-        //Logg results for testing
-        this->test(path, plann);
     }
 }
 
@@ -64,8 +64,6 @@ void planner::PublicPlann(const std::vector<std::tuple<std::string, int>> *plann
         int control_signal = std::get<1>(signal);
         plann_msg.data[i]= control_signal;
     }
-    for(int i = 0; i < plann->size(); i++)
-        std::cout << plann_msg.data[i] << std::endl;
     this->plannPublisher.publish(plann_msg);
 }
 
@@ -113,9 +111,11 @@ void planner::PublicStates(const std::vector<int> *map, const std::vector<int> *
     this->statesPublisher.publish(pathMap);
 }
 
-void planner::test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann)
+void planner::test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann, bool ltlResult)
 {
     ROS_INFO_STREAM("Logging results");
+
+    std::cout << "LTL machine reult: " << ltlResult << std::endl;
 
     if(path == NULL)
         return;

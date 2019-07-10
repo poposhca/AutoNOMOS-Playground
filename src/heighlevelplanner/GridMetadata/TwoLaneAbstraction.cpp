@@ -28,19 +28,26 @@ void TwoLaneAbstraction::setState(const int laneStates)
     this->actual_state = laneStates;
 }
 
+//Calculation hardcoded for Gazebo simulatuion
 void TwoLaneAbstraction::Compute_Abstraction()
 {
-    int visible_states = 5;
-    int state_offset = 3;
-    int width = this->map->info.width;
-    int map_cells_regions = width / visible_states;
-    for(int i = 0; i != width * this->map->info.height; i++)
+    int actualState = this->actual_state;
+    std::cout << "WITH:" << this->map->info.width << std::endl;
+    for(int i = 0; i < this->map->info.height; i++)
     {
-        int row_cell_number = i % width;
-        int cell_state = row_cell_number / map_cells_regions;
-        cellMetadata newMetadata;
-        newMetadata.cell_state = cell_state + state_offset ;
-        this->metadata->at(i) = newMetadata;
+        for(int j = 0; j < this->map->info.width; j++)
+        {
+            int cell = (this->map->info.width*i)+j;
+            int state = 0;
+            if(j == 28) state = actualState - 2;
+            if(j == 29) state = actualState - 1;
+            if(j == 30) state = actualState;
+            if(j == 31) state = actualState + 1;
+            if(j == 32) state = actualState + 2;
+            cellMetadata newMetadata;
+            newMetadata.cell_state = state ;
+            this->metadata->at(cell) = newMetadata;
+        }
     }
 }
 
