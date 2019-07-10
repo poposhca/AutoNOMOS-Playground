@@ -30,7 +30,7 @@ void TwoLaneAbstraction::setState(const int laneStates)
 
 void TwoLaneAbstraction::Compute_Abstraction()
 {
-    int visible_states = 3;
+    int visible_states = 5;
     int state_offset = 3;
     int width = this->map->info.width;
     int map_cells_regions = width / visible_states;

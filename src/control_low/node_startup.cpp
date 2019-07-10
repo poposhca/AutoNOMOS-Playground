@@ -14,27 +14,24 @@ int car_velocity = -50;
 bool is_goal_set = false;
 bool is_pose_set = false;
 bool is_plann_set = false;
-bool is_near_point = false;
 std::vector<int> plann;
 // Refactor please
 float car_x;
 float car_y;
 
-void check_is_near_point()
+bool check_is_near_point()
 {
-    ROS_INFO_STREAM("Ckecking point");
     float goalX = controller->get_goal_x();
     float goalY = controller->get_goal_y();
     double radious = sqrt(pow(goalX - car_x, 2) + pow(goalY - car_y, 2));
     if(radious <= RADIUS_LIMIT)
-        is_near_point = true;
+        return true;
     else
-        is_near_point = false;
+        return false;
 }
 
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
-    ROS_INFO_STREAM("Pose recieved");
     double actual_angle_rad = msg.theta;
     // Transfor angle to degrees, the initial angle is 90
     double actual_gle_degrees = angles::to_degrees(actual_angle_rad);
@@ -62,7 +59,8 @@ void push_plann(const std_msgs::Int32MultiArray &plann_msg)
 
 void set_next_point()
 {
-    check_is_near_point();
+    std::cout << "Testing" << std::endl;
+    bool is_near_point = check_is_near_point();
     bool has_next_step = plann.size() > 0;
     
     if(is_near_point && !has_next_step){
@@ -79,6 +77,9 @@ void set_next_point()
 
     if(is_near_point || !controller->get_is_goal_setted())
     {
+        ROS_INFO_STREAM("Setting next step:");
+        std::cout << "Is near goal: " << is_near_point << std::endl;
+        std::cout << "Car Pose: " << car_x << "," << car_y << std::endl;
         auto const next_step = plann.at(0);
         float next_y = car_y + 0.25;
         float next_x;
@@ -88,8 +89,7 @@ void set_next_point()
             next_x = car_x + 0.25;
         if(next_step == -1)
             next_x = car_x - 0.25;
-        std::cout << next_x << std::endl;
-        std::cout << next_y << std::endl;
+        std::cout << "Car next pose: " << next_x << "," << next_y << std::endl;
         controller->set_goal_point(next_x, next_y);
         plann.erase(plann.begin());
     }
@@ -117,10 +117,10 @@ int main(int argc, char** argv)
     while(ros::ok)
     {
         ros::spinOnce();
+        ROS_INFO_STREAM("Control:");
         if(is_pose_set && is_plann_set)
         {
             set_next_point();
-            ROS_INFO_STREAM("Control signals");
             // Get and publish velocity
             // float velocity = controller->get_velocity() * -1;
             std_msgs::Int16 velocity_msg;
