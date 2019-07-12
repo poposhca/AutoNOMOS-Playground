@@ -79,8 +79,6 @@ void planner::PublicPlann()
 {
     int next_signal = this->searchedPlan->getNextStep();
     std::cout << "PUBLIC: " << next_signal << std::endl;
-    char control;
-    std::cin >> control;
     std_msgs::Int16 controlMsg;
     controlMsg.data = next_signal;
     this->plannPublisher.publish(controlMsg);

@@ -4,7 +4,7 @@
         <param name="map/laser_range_max"     type="double"      value="6" />
     </node>
     <node name="states_mock" pkg="state_mock" type="state_mock" output="log" />
-    <node name="planner" pkg="planner" type="planner" output="screen" />
-    <node name="low_level" pkg="control_low" type="control_low" output="log" />
+    <node name="planner" pkg="planner" type="planner" output="log" />
+    <node name="low_level" pkg="control_low" type="control_low" output="screen" />
     <!-- <node name="experiments" pkg="testnode" type="testnode_experiments" output="log" /> -->
 </launch>

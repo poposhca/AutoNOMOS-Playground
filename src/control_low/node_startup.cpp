@@ -15,6 +15,7 @@ int car_velocity = -50;
 bool is_goal_set = false;
 bool is_pose_set = false;
 bool is_plann_set = false;
+int goal;
 std::vector<int> plann;
 // Refactor please
 float car_x;
@@ -31,18 +32,6 @@ bool check_is_near_point()
         return false;
 }
 
-void set_next_point(int next_step)
-{
-    float next_y = car_y + 0.25;
-    float next_x;
-    if(next_step == 0)
-        next_x = car_x;
-    if(next_step == 1)
-        next_x = car_x + 0.25;
-    if(next_step == -1)
-        next_x = car_x - 0.25;
-    controller->set_goal_point(next_x, next_y);
-}
 
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
@@ -53,12 +42,15 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
     car_x = msg.x;
     car_y = msg.y;
     is_pose_set = true;
+    std::cout << "Actual x: " << car_x << std::endl;
+    std::cout << "Actual y: " << car_y << std::endl;
 }
 
 void set_next_goal(const std_msgs::Int16 &msg)
 {
-    is_goal_set = true;
-    set_next_point(msg.data);
+    std::cout << "Goal Message: " << msg.data << std::endl;
+    goal = msg.data;
+    is_goal_set = false;
 }
 
 void push_plann(const std_msgs::Int32MultiArray &plann_msg)
@@ -74,6 +66,21 @@ void push_plann(const std_msgs::Int32MultiArray &plann_msg)
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
 {
     car_velocity = velocity.data;
+}
+
+void set_next_point(int next_step)
+{
+    float next_y = car_y + 0.25;
+    float next_x;
+    if(next_step == 0)
+        next_x = car_x;
+    if(next_step == 1)
+        next_x = car_x + 0.25;
+    if(next_step == -1)
+        next_x = car_x - 0.25;
+    std::cout << "Next x: " << next_x << std::endl;
+    std::cout << "Next y: " << next_y << std::endl;
+    controller->set_goal_point(next_x, next_y);
 }
 
 int main(int argc, char** argv)
@@ -93,16 +100,21 @@ int main(int argc, char** argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        ROS_INFO_STREAM("Control:");
         bool isNearPoint = check_is_near_point();
         if(isNearPoint)
         {
             std_msgs::Bool goal_msg;
             goal_msg.data = true;
             car_reached_next_goal.publish(goal_msg);
+            is_goal_set = false;
         }
-        else if(is_goal_set)
+        else
         {
+            if(!is_goal_set && is_pose_set)
+            {
+                set_next_point(goal);
+                is_goal_set = true;
+            }
             // Get and publish velocity
             // float velocity = controller->get_velocity() * -1;
             std_msgs::Int16 velocity_msg;
@@ -111,11 +123,9 @@ int main(int argc, char** argv)
 
             // Get and publish steering
             float angle = controller->get_angle();
-            std::cout << "  theta: " << angle << std::endl;
             std_msgs::Int16 steering_msg;
             steering_msg.data = static_cast<int>(angle);
             autonomos_s.publish(steering_msg);
-            is_goal_set = false;
         }
     }
     return 0;
