@@ -14,7 +14,8 @@ Point_Controller *controller;
 int car_velocity = -50;
 bool is_goal_set = false;
 bool is_pose_set = false;
-bool is_plann_set = false;
+bool is_next_point_set = false;
+bool sent_message = true;
 int goal;
 std::vector<int> plann;
 // Refactor please
@@ -42,15 +43,15 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
     car_x = msg.x;
     car_y = msg.y;
     is_pose_set = true;
-    std::cout << "Actual x: " << car_x << std::endl;
-    std::cout << "Actual y: " << car_y << std::endl;
 }
 
 void set_next_goal(const std_msgs::Int16 &msg)
 {
     std::cout << "Goal Message: " << msg.data << std::endl;
     goal = msg.data;
-    is_goal_set = false;
+    is_goal_set = true;
+    is_next_point_set = true;
+    sent_message = true;
 }
 
 void push_plann(const std_msgs::Int32MultiArray &plann_msg)
@@ -60,7 +61,6 @@ void push_plann(const std_msgs::Int32MultiArray &plann_msg)
     {
         plann.push_back( plann_msg.data[i]);
     }
-    is_plann_set = true;
 }
 
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
@@ -70,17 +70,21 @@ void set_car_speed_manual(const std_msgs::Int16 &velocity)
 
 void set_next_point(int next_step)
 {
-    float next_y = car_y + 0.25;
-    float next_x;
-    if(next_step == 0)
-        next_x = car_x;
-    if(next_step == 1)
-        next_x = car_x + 0.25;
-    if(next_step == -1)
-        next_x = car_x - 0.25;
-    std::cout << "Next x: " << next_x << std::endl;
-    std::cout << "Next y: " << next_y << std::endl;
-    controller->set_goal_point(next_x, next_y);
+    if(is_next_point_set)
+    {
+        float next_y = car_y + 0.25;
+        float next_x;
+        if(next_step == 0)
+            next_x = car_x;
+        if(next_step == 1)
+            next_x = car_x + 0.25;
+        if(next_step == -1)
+            next_x = car_x - 0.25;
+        std::cout << "Next x: " << next_x << std::endl;
+        std::cout << "Next y: " << next_y << std::endl;
+        controller->set_goal_point(next_x, next_y);
+        is_next_point_set = false;
+    }
 }
 
 int main(int argc, char** argv)
@@ -92,7 +96,7 @@ int main(int argc, char** argv)
     ros::Subscriber goal_pose = nh.subscribe("/control/goal", 1000, &set_next_goal);
     ros::Subscriber plann_subscriber = nh.subscribe("/control/plann", 1000, &push_plann);
     ros::Subscriber goal_velocity = nh.subscribe("/control/speed", 1000, &set_car_speed_manual);
-    ros::Publisher car_reached_next_goal = nh.advertise<std_msgs::Bool>("/planner/moveNext", 1000);
+    ros::Publisher car_reached_next_goal = nh.advertise<std_msgs::Bool>("/planner/move_next", 1000);
     ros::Publisher autonomos_v = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/speed", 1000);
     ros::Publisher autonomos_s = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/steering", 1000);
     controller = new Point_Controller(300, 1);
@@ -100,20 +104,17 @@ int main(int argc, char** argv)
     while(ros::ok)
     {
         ros::spinOnce();
-        bool isNearPoint = check_is_near_point();
-        if(isNearPoint)
+        if(is_pose_set && is_goal_set)
         {
-            std_msgs::Bool goal_msg;
-            goal_msg.data = true;
-            car_reached_next_goal.publish(goal_msg);
-            is_goal_set = false;
-        }
-        else
-        {
-            if(!is_goal_set && is_pose_set)
+            set_next_point(goal);
+            bool isNearPoint = check_is_near_point();
+            if(isNearPoint && sent_message)
             {
-                set_next_point(goal);
-                is_goal_set = true;
+                std::cout << "Goal Reached" << std::endl;
+                std_msgs::Bool goal_msg;
+                goal_msg.data = true;
+                car_reached_next_goal.publish(goal_msg);
+                sent_message = false;
             }
             // Get and publish velocity
             // float velocity = controller->get_velocity() * -1;
@@ -126,6 +127,7 @@ int main(int argc, char** argv)
             std_msgs::Int16 steering_msg;
             steering_msg.data = static_cast<int>(angle);
             autonomos_s.publish(steering_msg);
+
         }
     }
     return 0;

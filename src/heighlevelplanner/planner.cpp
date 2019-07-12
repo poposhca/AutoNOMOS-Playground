@@ -40,7 +40,7 @@ void planner::CreatePlan()
         }
         this->searchedPlan->pushPlan(path, plann);
         // Logg results for testing
-        this->test(this->searchedPlan->path, this->searchedPlan->plann, ltl_validation);  
+        // this->test(this->searchedPlan->path, this->searchedPlan->plann, ltl_validation);  
         //Push current plan to explorer
         if(firstTime)
         {
@@ -67,12 +67,10 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 
 void planner::ReadGoal(const std_msgs::Bool &isInGoal)
 {
-    if(isInGoal.data)
-    {
-        std::cout << "Moving forward" << std::endl;
-        this->searchedPlan->moveForward();
-        PublicPlann();
-    }
+    std::cout << "Moving forward" << std::endl;
+    std::cout << "Data: " << isInGoal.data << std::endl;
+    this->searchedPlan->moveForward();
+    PublicPlann();
 }
 
 void planner::PublicPlann()

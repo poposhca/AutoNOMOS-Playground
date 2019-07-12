@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     //Subscribe to topics
     ros::Subscriber subscribe_localization = nh.subscribe("/localization_array_test", 1000, &planner::ReadLaneState, planner_algorithm);
     ros::Subscriber subscribe_map = nh.subscribe("model/map", 1000, &planner::ReadMap, planner_algorithm);
-    ros::Subscriber subscribe_goal = nh.subscribe("/planner/moveNext", 1000, &planner::ReadGoal, planner_algorithm);
+    ros::Subscriber subscribe_goal = nh.subscribe("/planner/move_next", 1000, &planner::ReadGoal, planner_algorithm);
 
     //Start main algorithmr
     ROS_INFO_STREAM("Planner node up & running");
