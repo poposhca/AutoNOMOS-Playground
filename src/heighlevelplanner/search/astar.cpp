@@ -22,18 +22,6 @@ astar::astar(WorldAbstraction *world)
 std::vector<int>* astar::getRute(int start, int goal)
 {
     std::cout << "lastfound: " << *(this->lastGoalFound) << " goal: " << goal << std::endl;
-    /*int startSearchingCellValue = start;
-    int *startSearchingCell = &startSearchingCellValue;
-    bool isAlreadyARoute = validRouteExists(start, goal, startSearchingCell);
-    if(isAlreadyARoute)
-        return reconstruct_path(goal);
-    else
-    {
-        this->cellsCreated->clear();
-        this->closedSet->clear();
-        while(this->minHeap->size() != 0) this->minHeap->pop();
-        return search(*startSearchingCell, goal);
-    }*/
     this->cellsCreated->clear();
     this->closedSet->clear();
     while(this->minHeap->size() != 0) this->minHeap->pop();
@@ -180,7 +168,7 @@ std::vector<int>* astar::reconstruct_path(int actualCell)
     auto cell = this->cellsCreated->at(actualCell);
     while(cell->fatherIndex != -1)
     {
-        result_path->push_back(cell->index);
+        result_path->insert(result_path->begin(), cell->index);
         cell = this->cellsCreated->at(cell->fatherIndex);
     }
     return result_path;

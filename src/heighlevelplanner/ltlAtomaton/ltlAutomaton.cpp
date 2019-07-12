@@ -91,7 +91,7 @@ bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *
             // std::cout << "Eval: " << result << std::endl;
             // std::cout << "Expression: " << expression << " AP: " << atomic_proposition << std::endl;
             if (result && (edge+1) == actual_state_list->end())
-                return true;
+                break;
             if (result)
                 this->actualState = std::get<0>(*edge);
             else
