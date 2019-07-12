@@ -48,7 +48,7 @@ void planner::CreatePlan()
             firstTime = false;
         }
         //Public to Rviz
-        this->PublicPath(this->world->getMap(), path);
+        this->PublicPath(this->world->getMap(), this->searchedPlan->path);
         this->PublicStates(this->world->getMap(), this->world->getMapStates());
     }
 }

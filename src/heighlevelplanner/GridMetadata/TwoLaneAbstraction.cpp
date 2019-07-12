@@ -32,7 +32,6 @@ void TwoLaneAbstraction::setState(const int laneStates)
 void TwoLaneAbstraction::Compute_Abstraction()
 {
     int actualState = this->actual_state;
-    std::cout << "WITH:" << this->map->info.width << std::endl;
     for(int i = 0; i < this->map->info.height; i++)
     {
         for(int j = 0; j < this->map->info.width; j++)

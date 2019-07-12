@@ -21,7 +21,6 @@ astar::astar(WorldAbstraction *world)
 
 std::vector<int>* astar::getRute(int start, int goal)
 {
-    std::cout << "lastfound: " << *(this->lastGoalFound) << " goal: " << goal << std::endl;
     this->cellsCreated->clear();
     this->closedSet->clear();
     while(this->minHeap->size() != 0) this->minHeap->pop();

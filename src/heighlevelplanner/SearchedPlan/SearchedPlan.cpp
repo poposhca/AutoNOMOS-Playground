@@ -69,12 +69,16 @@ void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *
 
 void SearchedPlan::moveForward()
 {
+    std::cout << "Path len: " << this->path->size() << std::endl;
     this->path->erase(this->path->begin());
+    std::cout << "Path len: " << this->path->size() << std::endl;
+    this->plann->erase(this->plann->begin());
     for(auto cell = this->path->begin(); cell != this->path->end(); cell++)
     {
         int actual_cell_index = *cell;
         *cell = actual_cell_index - this->world_width;
     }
+    this->startSearchCell = this->path->back();
 }
 
 int SearchedPlan::getNextStep()
