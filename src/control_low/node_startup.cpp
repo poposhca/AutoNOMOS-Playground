@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <string>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Bool.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <geometry_msgs/Pose2D.h>
 #include <angles/angles.h>
@@ -30,6 +31,19 @@ bool check_is_near_point()
         return false;
 }
 
+void set_next_point(int next_step)
+{
+    float next_y = car_y + 0.25;
+    float next_x;
+    if(next_step == 0)
+        next_x = car_x;
+    if(next_step == 1)
+        next_x = car_x + 0.25;
+    if(next_step == -1)
+        next_x = car_x - 0.25;
+    controller->set_goal_point(next_x, next_y);
+}
+
 void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 {
     double actual_angle_rad = msg.theta;
@@ -41,10 +55,10 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
     is_pose_set = true;
 }
 
-void set_next_goal(const geometry_msgs::Pose2D &msg)
+void set_next_goal(const std_msgs::Int16 &msg)
 {
     is_goal_set = true;
-    controller->set_goal_point(msg.x, msg.y);
+    set_next_point(msg.data);
 }
 
 void push_plann(const std_msgs::Int32MultiArray &plann_msg)
@@ -57,44 +71,6 @@ void push_plann(const std_msgs::Int32MultiArray &plann_msg)
     is_plann_set = true;
 }
 
-void set_next_point()
-{
-    std::cout << "Testing" << std::endl;
-    bool is_near_point = check_is_near_point();
-    bool has_next_step = plann.size() > 0;
-    
-    if(is_near_point && !has_next_step){
-        car_velocity = 0;
-        std::cout << "No Point" << std::endl;
-        return;
-    }
-
-    if(!has_next_step) {
-        car_velocity = 0;
-        std::cout << "No Point" << std::endl;
-        return;
-    }
-
-    if(is_near_point || !controller->get_is_goal_setted())
-    {
-        ROS_INFO_STREAM("Setting next step:");
-        std::cout << "Is near goal: " << is_near_point << std::endl;
-        std::cout << "Car Pose: " << car_x << "," << car_y << std::endl;
-        auto const next_step = plann.at(0);
-        float next_y = car_y + 0.25;
-        float next_x;
-        if(next_step == 0)
-            next_x = car_x;
-        if(next_step == 1)
-            next_x = car_x + 0.25;
-        if(next_step == -1)
-            next_x = car_x - 0.25;
-        std::cout << "Car next pose: " << next_x << "," << next_y << std::endl;
-        controller->set_goal_point(next_x, next_y);
-        plann.erase(plann.begin());
-    }
-}
-
 void set_car_speed_manual(const std_msgs::Int16 &velocity)
 {
     car_velocity = velocity.data;
@@ -105,11 +81,11 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "control_low_node");
     ROS_INFO_STREAM("Low level controller initialized");
     ros::NodeHandle nh;
-    // Sub /AutoNOMOS_simulation/real_pose -> geometry_msgs/Pose2D
     ros::Subscriber autonomos_pose = nh.subscribe("/AutoNOMOS_simulation/real_pose", 1000, &autonomos_pose_listener);
     ros::Subscriber goal_pose = nh.subscribe("/control/goal", 1000, &set_next_goal);
     ros::Subscriber plann_subscriber = nh.subscribe("/control/plann", 1000, &push_plann);
     ros::Subscriber goal_velocity = nh.subscribe("/control/speed", 1000, &set_car_speed_manual);
+    ros::Publisher car_reached_next_goal = nh.advertise<std_msgs::Bool>("/planner/moveNext", 1000);
     ros::Publisher autonomos_v = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/speed", 1000);
     ros::Publisher autonomos_s = nh.advertise<std_msgs::Int16>("/AutoNOMOS_mini/manual_control/steering", 1000);
     controller = new Point_Controller(300, 1);
@@ -118,9 +94,15 @@ int main(int argc, char** argv)
     {
         ros::spinOnce();
         ROS_INFO_STREAM("Control:");
-        if(is_pose_set && is_plann_set)
+        bool isNearPoint = check_is_near_point();
+        if(isNearPoint)
         {
-            set_next_point();
+            std_msgs::Bool goal_msg;
+            goal_msg.data = true;
+            car_reached_next_goal.publish(goal_msg);
+        }
+        else if(is_goal_set)
+        {
             // Get and publish velocity
             // float velocity = controller->get_velocity() * -1;
             std_msgs::Int16 velocity_msg;

@@ -4,6 +4,8 @@
 #include <tuple>
 #include <algorithm>
 #include <ros/ros.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/Int16.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/Float32MultiArray.h>
 #include <nav_msgs/OccupancyGrid.h>
@@ -29,14 +31,16 @@ private:
     ros::Publisher plannPublisher;
     ros::Publisher pathPublisher;
     ros::Publisher statesPublisher;
-    void PublicPlann(const std::vector<std::tuple<std::string, int>> *plann);
+    void PublicPlann();
     void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
     void PublicStates(const std::vector<int> *map, const std::vector<int> *states);
+    bool firstTime;
 
 public:
     planner(WorldAbstraction *world, ruteExplorer *searcher);
     void ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array);
     void ReadMap(const nav_msgs::OccupancyGrid &map);
+    void ReadGoal(const std_msgs::Bool &isInGoal);
     void CreatePlan();
     void test(const std::vector<int> *path, const std::vector<std::tuple<std::string, int>> *plann, bool);
 };

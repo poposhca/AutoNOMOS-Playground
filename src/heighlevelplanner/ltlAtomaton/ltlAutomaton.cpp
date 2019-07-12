@@ -65,6 +65,8 @@ void ltl_Automaton::create_automaton(std::string ltl_formula)
 
 bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *chain, std::string *outFailState)
 {
+    if(chain == NULL)
+        return true;
     for(auto state = chain->begin(); state != chain->end(); state++)
     {
         auto atomic_proposition = std::get<0>(*state);

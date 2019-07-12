@@ -3,6 +3,7 @@
 
 SearchedPlan::SearchedPlan()
 {
+    this->world_width = 0;
     this->isPlanSet = false;
     this->startSearchCell = 0;
     this->goalSearchCell = 0;
@@ -10,6 +11,11 @@ SearchedPlan::SearchedPlan()
     this->nextInvalidCells = new std::vector<int>;
     this->plann = new std::vector<std::tuple<std::string, int>>;
 
+}
+
+void SearchedPlan::setWorldWitdh(int witdh)
+{
+    this->world_width = witdh;
 }
 
 void SearchedPlan::setPlan(std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
@@ -23,10 +29,16 @@ void SearchedPlan::setPlan(std::vector<int> *path, std::vector<std::tuple<std::s
 
 void SearchedPlan::pushPlan(std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
 {
+    if(path == NULL || path == NULL)
+        return;
+    if(path->empty() || path->empty())
+        return;
+    if(!this->isPlanSet) this->isPlanSet = true;
     for(auto cell = path->begin(); cell != path->end(); cell++)
         this->path->push_back(*cell);
     for(auto state = plann->begin(); state != plann->end(); state++)
         this->plann->push_back(*state);
+    this->startSearchCell = this->path->back();
 }
 
 void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
@@ -53,4 +65,23 @@ void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *
     }
 
     this->startSearchCell = path->at(planCellNUmber);
+}
+
+void SearchedPlan::moveForward()
+{
+    this->path->erase(this->path->begin());
+    for(auto cell = this->path->begin(); cell != this->path->end(); cell++)
+    {
+        int actual_cell_index = *cell;
+        *cell = actual_cell_index - this->world_width;
+    }
+}
+
+int SearchedPlan::getNextStep()
+{
+    std::cout << "Getting next" << std::endl;
+    auto next_state = this->plann->at(0);
+    int control_signal = std::get<1>(next_state);
+    std::cout << "Next signal" << control_signal << std::endl;
+    return control_signal;
 }
