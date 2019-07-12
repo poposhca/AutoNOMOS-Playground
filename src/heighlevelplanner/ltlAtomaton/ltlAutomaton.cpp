@@ -63,7 +63,7 @@ void ltl_Automaton::create_automaton(std::string ltl_formula)
     // std::cout << "Acceptance states " << aut->get_acceptance() << std::endl;
 }
 
-bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *chain)
+bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *chain, std::string *outFailState)
 {
     for(auto state = chain->begin(); state != chain->end(); state++)
     {
@@ -95,7 +95,10 @@ bool ltl_Automaton::evaluate_formula(std::vector<std::tuple<std::string, int>> *
             if (result)
                 this->actualState = std::get<0>(*edge);
             else
+            {
+                *outFailState = atomic_proposition;
                 return false;
+            }
         }
     }
     return true;

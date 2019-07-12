@@ -147,8 +147,6 @@ add_library(GOALSELECTER
 )
 
 #add_library(EXPLORER
-#    explore/search_tree.cpp
-#    explore/search_tree.h
 #    explore/explorer.cpp
 #    explore/explorer.h
 #)
@@ -156,6 +154,11 @@ add_library(GOALSELECTER
 add_library(LTL
     ltlAtomaton/ltlAutomaton.cpp
     ltlAtomaton/ltlAutomaton.h
+)
+
+add_library(PLAN
+    SearchedPlan/SearchedPlan.cpp
+    SearchedPlan/SearchedPlan.h
 )
 
 #Library for metadata atached to each grid cell
@@ -189,6 +192,7 @@ target_link_libraries(${PROJECT_NAME}
    GOALSELECTER
    #EXPLORER
    LTL
+   PLAN
    ${SPOT_LINK_LIB}
    ${MUPARSER_LINK_LIB}
 )

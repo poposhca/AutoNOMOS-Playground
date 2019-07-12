@@ -3,14 +3,16 @@
 planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
 {
     ros::NodeHandle nh;
+    this->searchedPlan = new SearchedPlan;
     this->world = world;
     this->searcher = searcher;
     this->plannPublisher = nh.advertise<std_msgs::Int32MultiArray>("/control/plann", 1000);
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
-    //this->automaton->create_automaton("!F(RC & X(RR))");
-    this->automaton->create_automaton("G(RC->F(CC))");
+    // this->automaton->create_automaton("!F(RC & X(RR))");
+    // this->automaton->create_automaton("G(RC->F(CC))");
+    this->automaton->create_automaton("RC");
 }
 
 void planner::CreatePlan()
@@ -23,14 +25,20 @@ void planner::CreatePlan()
         std::vector<int> *path;
         std::vector<std::tuple<std::string, int>> *plann;
         bool ltl_validation;
+        std::string LTLFailedState;
         do
         {
             SelectGoal goalSelector(this->world);
             goal = goalSelector.getGoal();
             path = this->searcher->getRute(start, goal);
             plann = this->world->getStatesChain(path);
-            ltl_validation = this->automaton->evaluate_formula(plann);
-            //Logg results for testing
+            ltl_validation = this->automaton->evaluate_formula(plann, &LTLFailedState);
+            // If fail, push just the valid states
+            if(!ltl_validation)
+            {
+                this->searchedPlan->invalidPLanFromCell(LTLFailedState, path, plann);
+            }
+            // Logg results for testing
             this->test(path, plann, ltl_validation);
         } while (!ltl_validation);   
         //Push current plan to explorer

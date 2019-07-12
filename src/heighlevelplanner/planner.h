@@ -13,6 +13,7 @@
 #include "search/search.h"
 #include "explore/explorer.h"
 #include "ltlAtomaton/ltlAutomaton.h"
+#include "SearchedPlan/SearchedPlan.h"
 
 #define NUM_STATES 7
 #define STATE_WIDTH 20
@@ -20,6 +21,7 @@
 class planner
 {
 private:
+    SearchedPlan *searchedPlan;
     WorldAbstraction *world;
     ltl_Automaton *automaton;
     ruteExplorer *searcher;
