@@ -11,8 +11,8 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
     // this->automaton->create_automaton("!F(RC & X(RR))");
-    // this->automaton->create_automaton("G(RC->F(CC))");
-    this->automaton->create_automaton("RC");
+    this->automaton->create_automaton("G(RC->F(CC))");
+    // this->automaton->create_automaton("RC");
     this->firstTime = true;
 }
 
@@ -36,9 +36,10 @@ void planner::CreatePlan()
         // If fail, push just the valid states
         if(!ltl_validation)
         {
+            ROS_INFO_STREAM("LTL fail " + LTLFailedState);
             this->searchedPlan->invalidPLanFromCell(LTLFailedState, path, plann);
         }
-        this->searchedPlan->pushPlan(path, plann);
+        this->searchedPlan->setPlan(path, plann);
         // Logg results for testing
         // this->test(this->searchedPlan->path, this->searchedPlan->plann, ltl_validation);  
         //Push current plan to explorer
@@ -67,16 +68,13 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 
 void planner::ReadGoal(const std_msgs::Bool &isInGoal)
 {
-    std::cout << "Moving forward" << std::endl;
-    std::cout << "Data: " << isInGoal.data << std::endl;
-    this->searchedPlan->moveForward();
+    // this->searchedPlan->moveForward();
     PublicPlann();
 }
 
 void planner::PublicPlann()
 {
     int next_signal = this->searchedPlan->getNextStep();
-    std::cout << "PUBLIC: " << next_signal << std::endl;
     std_msgs::Int16 controlMsg;
     controlMsg.data = next_signal;
     this->plannPublisher.publish(controlMsg);

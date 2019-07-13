@@ -40,7 +40,6 @@ int main(int argc, char **argv)
     {
         ros::spinOnce();
         planner_algorithm->CreatePlan();
-        loop_rate.sleep();
     }
     return 0;
 }

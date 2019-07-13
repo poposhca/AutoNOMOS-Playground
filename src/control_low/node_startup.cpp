@@ -1,4 +1,3 @@
-#include <istream>
 #include <ros/ros.h>
 #include <string>
 #include <std_msgs/Int16.h>
@@ -47,7 +46,6 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 
 void set_next_goal(const std_msgs::Int16 &msg)
 {
-    std::cout << "Goal Message: " << msg.data << std::endl;
     goal = msg.data;
     is_goal_set = true;
     is_next_point_set = true;
@@ -80,8 +78,8 @@ void set_next_point(int next_step)
             next_x = car_x + 0.25;
         if(next_step == -1)
             next_x = car_x - 0.25;
-        std::cout << "Next x: " << next_x << std::endl;
-        std::cout << "Next y: " << next_y << std::endl;
+         if(next_step == 100)
+            car_velocity = 0;
         controller->set_goal_point(next_x, next_y);
         is_next_point_set = false;
     }
@@ -103,6 +101,7 @@ int main(int argc, char** argv)
     is_goal_set = false;
     while(ros::ok)
     {
+        ROS_INFO_STREAM("SPIN");   
         ros::spinOnce();
         if(is_pose_set && is_goal_set)
         {
@@ -110,7 +109,6 @@ int main(int argc, char** argv)
             bool isNearPoint = check_is_near_point();
             if(isNearPoint && sent_message)
             {
-                std::cout << "Goal Reached" << std::endl;
                 std_msgs::Bool goal_msg;
                 goal_msg.data = true;
                 car_reached_next_goal.publish(goal_msg);

@@ -40,7 +40,7 @@ int main(int argc, char **argv)
         auto map = myMap->GetMap();
         //PrintMapInConsole(map);
         PublicMap(map, mapPublisher);
-        loop_rate.sleep();
+        // loop_rate.sleep();
     }
 
     return 0;

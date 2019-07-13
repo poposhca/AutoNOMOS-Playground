@@ -38,7 +38,7 @@ void SearchedPlan::pushPlan(std::vector<int> *path, std::vector<std::tuple<std::
         this->path->push_back(*cell);
     for(auto state = plann->begin(); state != plann->end(); state++)
         this->plann->push_back(*state);
-    this->startSearchCell = this->path->back();
+    // this->startSearchCell = this->path->back();
 }
 
 void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
@@ -64,14 +64,12 @@ void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *
         nextInvalidCells->push_back(value);
     }
 
-    this->startSearchCell = path->at(planCellNUmber);
+    // this->startSearchCell = path->at(planCellNUmber);
 }
 
 void SearchedPlan::moveForward()
 {
-    std::cout << "Path len: " << this->path->size() << std::endl;
     this->path->erase(this->path->begin());
-    std::cout << "Path len: " << this->path->size() << std::endl;
     this->plann->erase(this->plann->begin());
     for(auto cell = this->path->begin(); cell != this->path->end(); cell++)
     {
@@ -83,9 +81,9 @@ void SearchedPlan::moveForward()
 
 int SearchedPlan::getNextStep()
 {
-    std::cout << "Getting next" << std::endl;
+    if(this->plann->empty())
+        return 100;
     auto next_state = this->plann->at(0);
     int control_signal = std::get<1>(next_state);
-    std::cout << "Next signal" << control_signal << std::endl;
     return control_signal;
 }

@@ -39,7 +39,6 @@ void ltl_Automaton::create_automaton(std::string ltl_formula)
     unsigned num_states = aut->num_states();
     for (unsigned state = 0; state < num_states; ++state)
     {
-        std::cout << "State: " << state << std::endl;
         auto graph_edges = new std::vector<std::tuple<int, std::string>>();
         for (auto& t: aut->out(state))
         {
