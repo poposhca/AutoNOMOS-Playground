@@ -5,6 +5,7 @@ project(planner)
 add_compile_options(-std=c++14)
 # LTL packeges dependencies "SPOT"
 set( SPOT_LINK_LIB libspot.so )
+# Parser dependecie for translate edges boolean formulas
 set( MUPARSER_LINK_LIB libmuparser.so )
 link_directories( /usr/lib/ )
 link_directories( /usr/local/lib/ )
@@ -146,10 +147,10 @@ add_library(GOALSELECTER
     selectGoal/selectGoal.h
 )
 
-#add_library(EXPLORER
-#    explore/explorer.cpp
-#    explore/explorer.h
-#)
+add_library(EXPLORER
+    explore/explorer.cpp
+    explore/explorer.h
+)
 
 add_library(LTL
     ltlAtomaton/ltlAutomaton.cpp
@@ -190,7 +191,7 @@ target_link_libraries(${PROJECT_NAME}
    GRIDMETADATA
    SEARCHER
    GOALSELECTER
-   #EXPLORER
+   EXPLORER
    LTL
    PLAN
    ${SPOT_LINK_LIB}

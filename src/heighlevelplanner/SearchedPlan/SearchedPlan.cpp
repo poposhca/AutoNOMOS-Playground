@@ -1,5 +1,6 @@
 #include "./SearchedPlan.h"
 #include <iostream>
+#include <ros/ros.h>
 
 SearchedPlan::SearchedPlan()
 {
@@ -38,7 +39,7 @@ void SearchedPlan::pushPlan(std::vector<int> *path, std::vector<std::tuple<std::
         this->path->push_back(*cell);
     for(auto state = plann->begin(); state != plann->end(); state++)
         this->plann->push_back(*state);
-    // this->startSearchCell = this->path->back();
+    this->startSearchCell = this->path->back();
 }
 
 void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
@@ -63,8 +64,35 @@ void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *
         path->pop_back();
         nextInvalidCells->push_back(value);
     }
+}
 
-    // this->startSearchCell = path->at(planCellNUmber);
+void SearchedPlan::invalidPLanFromCell(int startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)
+{
+    ROS_INFO_STREAM("Invalidating path");
+    int CellNUmber = 0;
+    std::vector<int>::iterator pathCellPosition;
+    for(auto pathIt = path->begin(); pathIt != path->end(); pathIt++)
+    {
+        int state = *pathIt;
+        if(startCell == state)
+        {
+            ROS_INFO_STREAM("FOUND");
+            pathCellPosition = pathIt;
+            break;
+        }
+        CellNUmber++;
+    }
+    path->erase(pathCellPosition, path->end());
+
+    ROS_INFO_STREAM("Invalidating plan");
+    for(int i = plann->size() - 1; i != CellNUmber; i--)
+    {
+        plann->pop_back();
+    }
+    ROS_INFO_STREAM("finish");
+    
+    this->nextInvalidCells->push_back(startCell);
+
 }
 
 void SearchedPlan::moveForward()
@@ -86,4 +114,10 @@ int SearchedPlan::getNextStep()
     auto next_state = this->plann->at(0);
     int control_signal = std::get<1>(next_state);
     return control_signal;
+}
+
+void SearchedPlan::clearPlan()
+{
+    this->plann->clear();
+    this->path->clear();
 }

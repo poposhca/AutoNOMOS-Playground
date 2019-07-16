@@ -1,71 +1,31 @@
-#include "explorer.h"
+#include "./explorer.h"
+#include <ros/ros.h>
 
-Explorer::Explorer(float car_throttle, std::string speedTopic, std::string angleTopic, ros::NodeHandle nh)
+Explorer::Explorer(int saveDistance)
 {
-    this->car_throttle = car_throttle;
-    this->constrolSignalPublisher = nh.advertise<std_msgs::Float64>("/local_planner", 1000);
-    //this->throttlePublisher = nh.advertise<std_msgs::Int16>(speedTopic, 1000);
-    //this->steeringPublisher = nh.advertise<std_msgs::Int16>(angleTopic, 1000);
+    this->saveDistance = saveDistance;
 }
 
-// void Explorer::StartMoving()
-// {
-//     std_msgs::Int16 throttleMessage;
-//     throttleMessage.data = this->car_throttle;
-//     this->throttlePublisher.publish(throttleMessage);
-// }
-
-void Explorer::PushPlann(const std::vector<std::tuple<std::string, int>> *plann)
+bool Explorer::simpleRouteValidation(WorldAbstraction *world, std::vector<int> *path, int *failState)
 {
-    if(plann != NULL)
+    auto map = world->getMap();
+    for(auto state = path->begin(); state != path->end(); state++)
     {
-        for(auto state = plann->begin; state != plann->end(); state++)
-            this->plann.push_back(*state);
+        int cell = *state + world->getWidth();
+        int distance = 1;
+        while(cell < map->size())
+        {
+            auto map_state = map->at(cell);
+            if(map_state >= 50 && distance < saveDistance)
+            {
+                *failState = *state;
+                return false;
+            }
+            else if(map_state >= 50 && distance >= saveDistance)
+                break;
+            cell += world->getWidth();
+            distance++;
+        }
     }
+    return true;
 }
-
-// void Explorer::SetGoal(float x, float y, float theta)
-// {
-//     this->goalx =x;
-//     this->goaly = y;
-//     this->goalTheta = theta;
-// }
-
-// void Explorer::Explor()
-// {
-//     int actual_state = 0;
-//     bool goal_reached = false;
-//     while(!goal_reached)
-//     {
-//         this->controller->UpdateActualPose(this->model->actual_x, this->model->actual_y, this->model->actual_theta);
-//         this->controller->UpdateNextPose(this->goalx, this->goaly, this->goalTheta);
-//         this->controller->setActualParameters();
-//         float v = this->controller->getVelocity();
-//         float gamma = this->controller->getSteering();
-//         float gamma_radians = gamma * PI / 180;
-//         if(this->model->HasValidContrins(v, gamma_radians))
-//         {
-//             this->model->UpdateParaemters(v, gamma);
-//             float* points = this->model->getPoints(this->time);
-//             std::cout << "Desplazamiento: " << points[0] << ',' << points[1] << ',' << points[2] << std::endl;
-//             goal_reached = IsInGoal(points[0], points[1]);
-//         }
-//         else
-//         {
-//             this->goalx -= 5;
-//             std::cout << "No se alcanso la ruta, goal actual " << this->goalx << " v " << v << std::endl;
-//             int control;
-//             std::cin >> control;
-//         }
-//     }
-//     std::cout << "GLORIA" << std::endl;
-// }
-
-// bool Explorer::IsInGoal(float actual_x, float actual_y)
-// {
-//     float dif_x = actual_x * this->goal_accept_zone;
-//     float dif_y = actual_y * this->goal_accept_zone;
-//     bool acceptable_x = actual_x >= this->goalx - dif_x && actual_x <= this->goalx - dif_x;
-//     bool acceptable_y = actual_y >= this->goaly - dif_y && actual_y <= this->goaly - dif_y;
-//     return acceptable_x && acceptable_y;
-// }

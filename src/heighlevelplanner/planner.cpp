@@ -6,6 +6,7 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     this->searchedPlan = new SearchedPlan;
     this->world = world;
     this->searcher = searcher;
+    this->explorer = new Explorer(5);
     this->plannPublisher = nh.advertise<std_msgs::Int16>("/control/goal", 1000);
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
@@ -21,28 +22,41 @@ void planner::CreatePlan()
     if(this->world->getIsMapSet() && this->world->getStateIsSet())
     {
         this->world->Compute_Abstraction();
-        if(!this->searchedPlan->isPlanSet)
-            this->searchedPlan->startSearchCell = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
+        this->searchedPlan->clearPlan();
+        this->searchedPlan->startSearchCell = ((this->world->getHeight() / 2) - 1) * this->world->getWidth() + (this->world->getWidth() / 2);
         int goal;
         std::vector<int> *path;
         std::vector<std::tuple<std::string, int>> *plann;
         bool ltl_validation;
         std::string LTLFailedState;
+        bool explorer_validation;
+        int explorer_fail_state;
         SelectGoal goalSelector(this->world);
         goal = goalSelector.getGoal();
-        path = this->searcher->getRute(this->searchedPlan->startSearchCell, goal);
-        plann = this->world->getStatesChain(path);
-        ltl_validation = this->automaton->evaluate_formula(plann, &LTLFailedState);
-        // If fail, push just the valid states
-        if(!ltl_validation)
-        {
-            ROS_INFO_STREAM("LTL fail " + LTLFailedState);
-            this->searchedPlan->invalidPLanFromCell(LTLFailedState, path, plann);
-        }
-        this->searchedPlan->setPlan(path, plann);
-        // Logg results for testing
-        // this->test(this->searchedPlan->path, this->searchedPlan->plann, ltl_validation);  
-        //Push current plan to explorer
+        do {
+            path = this->searcher->getRute(this->searchedPlan->startSearchCell, goal, this->searchedPlan->nextInvalidCells);
+            plann = this->world->getStatesChain(path);
+            ltl_validation = this->automaton->evaluate_formula(plann, &LTLFailedState);
+            // If fail, push just the valid states
+            // Logg results for testing
+            // this->test(path, plann, ltl_validation);  
+            if(!ltl_validation)
+            {
+                ROS_INFO_STREAM("LTL fail " + LTLFailedState);
+                this->searchedPlan->invalidPLanFromCell(LTLFailedState, path, plann);
+            }
+            explorer_validation = this->explorer->simpleRouteValidation(this->world, path, &explorer_fail_state);
+            if(!explorer_validation)
+            {
+                ROS_INFO_STREAM("EXPLORER fail ");
+                ROS_INFO_STREAM(explorer_fail_state);
+                this->searchedPlan->invalidPLanFromCell(explorer_fail_state, path, plann);
+            }
+            else ROS_INFO_STREAM("EXPLORER succes ");
+            this->searchedPlan->pushPlan(path, plann);
+        } while(!explorer_validation);
+        this->searchedPlan->nextInvalidCells->clear();
+        // Push current plan to explorer
         if(firstTime)
         {
             this->PublicPlann();

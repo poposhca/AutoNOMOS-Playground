@@ -8,7 +8,7 @@
 class ruteExplorer
 {
 public:
-    virtual std::vector<int>* getRute( int, int) = 0;
+    virtual std::vector<int>* getRute(int, int, std::vector<int>*) = 0;
 };
 
 #endif

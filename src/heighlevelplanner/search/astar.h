@@ -55,7 +55,7 @@ private:
 public:
     astar(WorldAbstraction *world);
     void setMapMetadata(const nav_msgs::OccupancyGrid&);
-    std::vector<int>* getRute(int start, int goal);
+    std::vector<int>* getRute(int start, int goal, std::vector<int> *preCLosedSet);
     void Test();
 };
 

@@ -19,10 +19,13 @@ astar::astar(WorldAbstraction *world)
     this->minHeap = new std::priority_queue<cellSearchInfo*, std::vector<cellSearchInfo*>, cellComparison>();
 }
 
-std::vector<int>* astar::getRute(int start, int goal)
+std::vector<int>* astar::getRute(int start, int goal, std::vector<int> *preCLosedSet)
 {
     this->cellsCreated->clear();
     this->closedSet->clear();
+    if(!preCLosedSet->empty())
+        for(auto state = preCLosedSet->begin(); state != preCLosedSet->end(); state++)
+            this->closedSet->emplace(*state, new cellSearchInfo);
     while(this->minHeap->size() != 0) this->minHeap->pop();
     return search(start, goal);
 }

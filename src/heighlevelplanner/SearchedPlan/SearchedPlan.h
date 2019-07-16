@@ -22,8 +22,10 @@ public:
     void setPlan(std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann);
     void pushPlan(std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann);
     void invalidPLanFromCell(std::string startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann);
+    void invalidPLanFromCell(int cellIndex, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann);
     void moveForward();
     int getNextStep();
+    void clearPlan();
 };
 
 #endif
