@@ -28,6 +28,11 @@ void TwoLaneAbstraction::setState(const int laneStates)
     this->actual_state = laneStates;
 }
 
+int TwoLaneAbstraction::getState()
+{
+    return this->actual_state;
+}
+
 //Calculation hardcoded for Gazebo simulatuion
 void TwoLaneAbstraction::Compute_Abstraction()
 {
@@ -113,19 +118,20 @@ std::vector<std::tuple<std::string, int>>* TwoLaneAbstraction::getStatesChain(st
         //Create and set new state tuple <state name, control signal>
         auto control_signal = getControlSignal(state_metadata.cell_state, next_state);
         auto newStateTuple = std::make_tuple(name, control_signal);
-        resultChain->push_back(newStateTuple);
+        // resultChain->push_back(newStateTuple);
+        resultChain->insert(resultChain->begin(), newStateTuple);
     }
     return resultChain;
 }
 
 int TwoLaneAbstraction::getControlSignal(int actual_state, int next_state)
 {
-    if(actual_state == next_state) 
+    if(this->actual_state == actual_state) 
         return 0;
-    if(actual_state > next_state) 
-        return 1;
-    if(actual_state < next_state) 
+    if(this->actual_state > actual_state) 
         return -1;
+    if(this->actual_state < actual_state) 
+        return 1;
 }
 
 void TwoLaneAbstraction::test()

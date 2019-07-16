@@ -58,12 +58,13 @@ void SearchedPlan::invalidPLanFromCell(std::string startCell, std::vector<int> *
     }
     plann->erase(planCellPosition, plann->end());
 
+    this->nextInvalidCells->push_back(path->at(planCellNUmber));
     for(int i = path->size() - 1; i != planCellNUmber; i--)
     {
         int value = path->at(i);
         path->pop_back();
-        nextInvalidCells->push_back(value);
     }
+    path->pop_back();
 }
 
 void SearchedPlan::invalidPLanFromCell(int startCell, std::vector<int> *path, std::vector<std::tuple<std::string, int>> *plann)

@@ -5,15 +5,16 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     ros::NodeHandle nh;
     this->searchedPlan = new SearchedPlan;
     this->world = world;
+    this->world->setState(4);
     this->searcher = searcher;
-    this->explorer = new Explorer(5);
+    this->explorer = new Explorer(6);
     this->plannPublisher = nh.advertise<std_msgs::Int16>("/control/goal", 1000);
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
     this->automaton = new ltl_Automaton();
     // this->automaton->create_automaton("!F(RC & X(RR))");
-    this->automaton->create_automaton("G(RC->F(CC))");
-    // this->automaton->create_automaton("RC");
+    // this->automaton->create_automaton("G(RC->F(CC))");
+    this->automaton->create_automaton("RC");
     this->firstTime = true;
 }
 
@@ -42,9 +43,11 @@ void planner::CreatePlan()
             // this->test(path, plann, ltl_validation);  
             if(!ltl_validation)
             {
-                ROS_INFO_STREAM("LTL fail " + LTLFailedState);
+                ROS_INFO_STREAM("LTL fail");
                 this->searchedPlan->invalidPLanFromCell(LTLFailedState, path, plann);
             }
+            else
+                ROS_INFO_STREAM("LTL succes");
             explorer_validation = this->explorer->simpleRouteValidation(this->world, path, &explorer_fail_state);
             if(!explorer_validation)
             {
@@ -54,7 +57,7 @@ void planner::CreatePlan()
             }
             else ROS_INFO_STREAM("EXPLORER succes ");
             this->searchedPlan->pushPlan(path, plann);
-        } while(!explorer_validation);
+        } while(!explorer_validation && !ltl_validation);
         this->searchedPlan->nextInvalidCells->clear();
         // Push current plan to explorer
         if(firstTime)
@@ -71,7 +74,7 @@ void planner::CreatePlan()
 void planner::ReadLaneState(const std_msgs::Float32MultiArray &loacalization_array)
 {
     auto state = loacalization_array.data.at(0);
-    this->world->setState(state);
+    // this->world->setState(state);
 }
 
 void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
@@ -83,12 +86,14 @@ void planner::ReadMap(const nav_msgs::OccupancyGrid &map)
 void planner::ReadGoal(const std_msgs::Bool &isInGoal)
 {
     // this->searchedPlan->moveForward();
+    ROS_INFO_STREAM("PUBLISHING");
     PublicPlann();
 }
 
 void planner::PublicPlann()
 {
     int next_signal = this->searchedPlan->getNextStep();
+    this->world->setState(this->world->getState() + next_signal);
     std_msgs::Int16 controlMsg;
     controlMsg.data = next_signal;
     this->plannPublisher.publish(controlMsg);

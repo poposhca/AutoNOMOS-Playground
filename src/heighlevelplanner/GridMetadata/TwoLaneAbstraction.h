@@ -32,6 +32,7 @@ public:
     bool getStateIsSet();
     int getWidth();
     int getHeight();
+    int getState();
     float getResolution();
     std::vector<std::tuple<std::string, int>>* getStatesChain(std::vector<int> *chain);
     void Compute_Abstraction();

@@ -10,7 +10,7 @@
 #define RADIUS_LIMIT 0.1
 
 Point_Controller *controller;
-int car_velocity = -50;
+int car_velocity = -70;
 bool is_goal_set = false;
 bool is_pose_set = false;
 bool is_next_point_set = false;
@@ -46,6 +46,8 @@ void autonomos_pose_listener(geometry_msgs::Pose2D msg)
 
 void set_next_goal(const std_msgs::Int16 &msg)
 {
+    ROS_INFO_STREAM("Next goal recived");
+    ROS_INFO_STREAM(msg.data);
     goal = msg.data;
     is_goal_set = true;
     is_next_point_set = true;
@@ -68,18 +70,38 @@ void set_car_speed_manual(const std_msgs::Int16 &velocity)
 
 void set_next_point(int next_step)
 {
+    ROS_INFO_STREAM("Variable");
+    ROS_INFO_STREAM(next_step);
     if(is_next_point_set)
     {
-        float next_y = car_y + 0.25;
+        float next_y;
         float next_x;
         if(next_step == 0)
+        {
+            next_y = car_y + 0.25;
             next_x = car_x;
+            ROS_INFO_STREAM("0 signal");
+        }
         if(next_step == 1)
+        {
+            next_y = car_y + 0.75;
             next_x = car_x + 0.25;
+            ROS_INFO_STREAM("1 signal");
+        }
         if(next_step == -1)
+        {
+            next_y = car_y + 0.75;
             next_x = car_x - 0.25;
-         if(next_step == 100)
+            ROS_INFO_STREAM("-1 signal");
+        }
+        if(next_step == 100)
+        {
             car_velocity = 0;
+        }
+        ROS_INFO_STREAM("Actual point:");
+        ROS_INFO_STREAM(car_x);
+        ROS_INFO_STREAM("Next point:");
+        ROS_INFO_STREAM(next_x);
         controller->set_goal_point(next_x, next_y);
         is_next_point_set = false;
     }
@@ -125,7 +147,12 @@ int main(int argc, char** argv)
             std_msgs::Int16 steering_msg;
             steering_msg.data = static_cast<int>(angle);
             autonomos_s.publish(steering_msg);
-
+            ROS_INFO_STREAM("Goal point");
+            ROS_INFO_STREAM(controller->get_goal_x()); 
+            ROS_INFO_STREAM(controller->get_goal_y());
+            ROS_INFO_STREAM("Actual point");
+            ROS_INFO_STREAM(car_x); 
+            ROS_INFO_STREAM(car_y); 
         }
     }
     return 0;
