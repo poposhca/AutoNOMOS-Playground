@@ -8,8 +8,10 @@
 #include <std_msgs/Int16.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/String.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/MapMetaData.h>
+#include <sstream>
 #include "GridMetadata/WorldAbstraction.h"
 #include "selectGoal/selectGoal.h"
 #include "search/search.h"
@@ -31,7 +33,10 @@ private:
     ros::Publisher plannPublisher;
     ros::Publisher pathPublisher;
     ros::Publisher statesPublisher;
+    ros::Publisher heighLevelPlanPublisher;
+    ros::Publisher controlPlanPublisher;
     void PublicPlann();
+    void PublicAllPLan();
     void PublicPath(const std::vector<int> *map, const std::vector<int> *path);
     void PublicStates(const std::vector<int> *map, const std::vector<int> *states);
     bool firstTime;

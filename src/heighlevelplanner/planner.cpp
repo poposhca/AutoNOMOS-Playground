@@ -11,6 +11,8 @@ planner::planner(WorldAbstraction *world, ruteExplorer *searcher)
     this->plannPublisher = nh.advertise<std_msgs::Int16>("/control/goal", 1000);
     this->pathPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/path", 1000);
     this->statesPublisher = nh.advertise<nav_msgs::OccupancyGrid>("model/states", 1000);
+    this->heighLevelPlanPublisher = nh.advertise<std_msgs::String>("/model/heighLevelPlan", 1000);
+    this->controlPlanPublisher = nh.advertise<std_msgs::String>("/model/controlLevelPlan", 1000);
     this->automaton = new ltl_Automaton();
     // this->automaton->create_automaton("!F(RC & X(RR))");
     // this->automaton->create_automaton("G(RC->F(CC))");
@@ -68,6 +70,7 @@ void planner::CreatePlan()
         //Public to Rviz
         this->PublicPath(this->world->getMap(), this->searchedPlan->path);
         this->PublicStates(this->world->getMap(), this->world->getMapStates());
+        this->PublicAllPLan();
     }
 }
 
@@ -97,6 +100,32 @@ void planner::PublicPlann()
     std_msgs::Int16 controlMsg;
     controlMsg.data = next_signal;
     this->plannPublisher.publish(controlMsg);
+}
+
+void planner::PublicAllPLan()
+{
+    auto plan = this->searchedPlan->plann;
+    
+    std::stringstream heighLevelPlan;
+    std_msgs::String heighLevelPlanMessage;
+
+    std::stringstream controlPLan;
+    std_msgs::String controlPLanMessage;
+
+    for(auto state = plan->begin(); state != plan->end(); state++)
+    {
+        std::string stateName = std::get<0>(*state);
+        heighLevelPlan << stateName << ",";
+
+        int controlSignal = std::get<1>(*state);
+        controlPLan << controlSignal << ",";
+    }
+
+    heighLevelPlanMessage.data = heighLevelPlan.str();
+    this->heighLevelPlanPublisher.publish(heighLevelPlanMessage);
+
+    controlPLanMessage.data = controlPLan.str();
+    this->controlPlanPublisher.publish(controlPLanMessage);
 }
 
 void planner::PublicPath(const std::vector<int> *map, const std::vector<int> *path)
@@ -147,23 +176,23 @@ void planner::test(const std::vector<int> *path, const std::vector<std::tuple<st
 {
     ROS_INFO_STREAM("Logging results");
 
-    std::cout << "LTL machine reult: " << ltlResult << std::endl;
+    // std::cout << "LTL machine reult: " << ltlResult << std::endl;
 
-    if(path == NULL)
-        return;
-    std::cout << "Searched states:" << std::endl;
-    for(auto i = path->begin(); i != path->end(); i++)
-        std::cout << *i << ", ";
-    std::cout << "" << std::endl;
+    // if(path == NULL)
+    //     return;
+    // std::cout << "Searched states:" << std::endl;
+    // for(auto i = path->begin(); i != path->end(); i++)
+    //     std::cout << *i << ", ";
+    // std::cout << "" << std::endl;
 
-    if(plann == NULL)
-        return;
-    std::cout << "Hiegh level plan:" << std::endl;
-    for(auto i = plann->begin(); i != plann->end(); i++)
-         std::cout << "(" << std::get<0>(*i) << "," << std::get<1>(*i) << "), ";
-    std::cout << "" << std::endl;
+    // if(plann == NULL)
+    //     return;
+    // std::cout << "Hiegh level plan:" << std::endl;
+    // for(auto i = plann->begin(); i != plann->end(); i++)
+    //      std::cout << "(" << std::get<0>(*i) << "," << std::get<1>(*i) << "), ";
+    // std::cout << "" << std::endl;
 
-    std::cout << "================================" << std::endl;
+    // std::cout << "================================" << std::endl;
     // char control;
     // std::cin >> control;
 }
